@@ -11,6 +11,9 @@ library(shiny)
 library(data.table)
 library(randomForest)
 
+# Set working directory
+setwd(dirname(rstudioapi::getSourceEditorContext()$path))
+
 # Read in the RF model
 model <- readRDS("model.rds")
 
