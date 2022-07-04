@@ -1,1 +1,1 @@
-This repository contain applications in R using Shiny
+This repository contains applications in R using Shiny
