@@ -25,26 +25,35 @@ ui <- pageWithSidebar(
   
   # Input values
   sidebarPanel(
-    HTML("<h3>Input parameters</h4>"),
-    sliderInput("Sepal.Length", label = "Sepal Length", value = 5.0,
+    HTML("<h3>Input parameters</h3>"),
+    sliderInput("Sepal.Length", 
+                label = "Sepal Length", 
+                value = 5.0,
                 min = min(TrainSet$Sepal.Length),
-                max = max(TrainSet$Sepal.Length)
-    ),
-    sliderInput("Sepal.Width", label = "Sepal Width", value = 3.6,
+                max = max(TrainSet$Sepal.Length)),
+    sliderInput("Sepal.Width", 
+                label = "Sepal Width", 
+                value = 3.6,
                 min = min(TrainSet$Sepal.Width),
                 max = max(TrainSet$Sepal.Width)),
-    sliderInput("Petal.Length", label = "Petal Length", value = 1.4,
+    sliderInput("Petal.Length", 
+                label = "Petal Length", 
+                value = 1.4,
                 min = min(TrainSet$Petal.Length),
                 max = max(TrainSet$Petal.Length)),
-    sliderInput("Petal.Width", label = "Petal Width", value = 0.2,
+    sliderInput("Petal.Width", 
+                label = "Petal Width",
+                value = 0.2,
                 min = min(TrainSet$Petal.Width),
                 max = max(TrainSet$Petal.Width)),
     
-    actionButton("submitbutton", "Submit", class = "btn btn-primary")
+    actionButton("submitbutton", "Submit",
+                 class = "btn btn-primary")
   ),
   
   mainPanel(
-    tags$label(h3('Status/Output')), # Status/Output Text Box
+    #tags$label(h3('Status/Output')), # Status/Output Text Box
+    HTML("<h3>Status/Output</h3>"),
     verbatimTextOutput('contents'),
     tableOutput('tabledata') # Prediction results table
     
@@ -71,8 +80,8 @@ server<- function(input, output, session) {
                              input$Petal.Width)),
       stringsAsFactors = FALSE)
     
-    Species <- 0
-    df <- rbind(df, Species)
+    # Species <- 0
+    # df <- rbind(df, Species)
     input <- transpose(df)
     write.table(input,"input.csv", sep=",", quote = FALSE, row.names = FALSE, col.names = FALSE)
     

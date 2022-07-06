@@ -23,8 +23,8 @@ ui <- pageWithSidebar(
   
   # Input values
   sidebarPanel(
-    #HTML("<h3>Input parameters</h3>"),
-    tags$label(h3('Input parameters')),
+    HTML("<h3>Input parameters</h3>"),
+    #tags$label(h3('Input parameters')),
     numericInput("Sepal.Length", 
                  label = "Sepal Length", 
                  value = 5.1),
@@ -43,7 +43,8 @@ ui <- pageWithSidebar(
   ),
   
   mainPanel(
-    tags$label(h3('Status/Output')), # Status/Output Text Box
+    #tags$label(h3('Status/Output')), # Status/Output Text Box
+    HTML("<h3>Status/Output</h3>"),
     verbatimTextOutput('contents'),
     tableOutput('tabledata') # Prediction results table
     
@@ -70,8 +71,8 @@ server<- function(input, output, session) {
                              input$Petal.Width)),
       stringsAsFactors = FALSE)
     
-    Species <- 0
-    df <- rbind(df, Species)
+    # Species <- 0
+    # df <- rbind(df, Species)
     input <- transpose(df)
     write.table(input,"input.csv", sep=",", quote = FALSE, row.names = FALSE, col.names = FALSE)
     
