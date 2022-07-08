@@ -2,6 +2,11 @@ library(shiny)
 library(shinythemes)
 
 
+# Set working directory
+setwd(dirname(rstudioapi::getSourceEditorContext()$path))
+
+
+
 ####################################
 # User Interface                   #
 ####################################
@@ -13,12 +18,12 @@ ui <- fluidPage(theme = shinytheme("united"),
                                     sidebarPanel(
                                       HTML("<h3>Input parameters</h3>"),
                                       sliderInput("height", 
-                                                  label = "Height", 
+                                                  label = "Height (cm)", 
                                                   value = 175, 
                                                   min = 40, 
                                                   max = 250),
                                       sliderInput("weight", 
-                                                  label = "Weight", 
+                                                  label = "Weight (Kg)", 
                                                   value = 70, 
                                                   min = 20, 
                                                   max = 100),

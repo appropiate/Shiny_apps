@@ -19,6 +19,8 @@ weather <- read.csv("https://raw.githubusercontent.com/dataprofessor/data/master
 weather$outlook <- as.factor(weather$outlook)
 weather$play <- as.factor(weather$play)
 
+# Set working directory
+setwd(dirname(rstudioapi::getSourceEditorContext()$path))
 
 # Build model
 model <- randomForest(play ~ ., data = weather, ntree = 500, mtry = 4, importance = TRUE)
