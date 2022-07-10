@@ -5,7 +5,7 @@ author: "Sergio Carracedo Huroz"
 date: 'July 2022'
 output:
   bookdown::html_document2:
-    toc: yes
+    toc: no
     toc_depth: 3
     base_format: prettydoc::html_pretty
   html_document:
@@ -30,10 +30,9 @@ editor_options:
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE, comment = NA, message = FALSE)
+knitr::opts_chunk$set(echo = FALSE, comment = NA, message = FALSE, warning = FALSE)
 ```
 
-\pagebreak
 ```{r}
 # Importing libraries
 library(randomForest)
@@ -41,10 +40,13 @@ library(kableExtra)
 library(dplyr)
 library(caret)
 library(C50) # Decision tree
+
+# Set working directory
+setwd(dirname(rstudioapi::getSourceEditorContext()$path))
 ```
 
 
-# Summary of data used to build Decision tree model
+### Summary of data used to build Decision tree model
 ```{r }
 # Importing the df dataset
 df <- read.csv("diabetes.txt", stringsAsFactors = TRUE)
@@ -72,7 +74,7 @@ TestingSet <- TestingSet[,-1]
 model.predict <- predict(model,TestingSet) 
 ```
 
-# Algorithm performance
+### Algorithm performance
 ```{r }
 
 # Model Performance

@@ -15,6 +15,7 @@ df <- read.csv("diabetes.txt", stringsAsFactors = TRUE)
 
 
 # Performs stratified random split of the data set
+set.seed(123)
 TrainingIndex <- createDataPartition(df$age, p=0.75, list = FALSE)
 TrainingSet <- df[TrainingIndex,] # Training Set
 TestingSet <- df[-TrainingIndex,] # Test Set
