@@ -34,7 +34,7 @@ editor_options:
 
 
 
-### Summary of data used to build Decision tree model
+#### Summary of data used to build Decision tree model
 
 ```
     pregnant         glucose         pressure         triceps         insulin            mass          pedigree     
@@ -56,7 +56,7 @@ editor_options:
 
 
 
-### Algorithm performance
+#### Algorithm performance
 
 ```
 Confusion Matrix and Statistics

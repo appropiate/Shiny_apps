@@ -96,7 +96,7 @@ server <- function(input, output) {
   datasetInput <- reactive({  
     
     df <- data.frame(
-      # variable names in dataset
+      # variable names in data set
       Name = c("pregnant",
                "glucose",
                "pressure",
@@ -130,7 +130,7 @@ server <- function(input, output) {
   
   # Status/Output Text Box
   output$contents <- renderPrint({
-    if (input$submitbutton>0) { 
+    if (input$submitbutton > 0) { 
       isolate("Calculation complete.") 
     } else {
       return("Server is ready for calculation.")
@@ -139,7 +139,7 @@ server <- function(input, output) {
   
   # Prediction results table
   output$tabledata <- renderTable({
-    if (input$submitbutton>0) { 
+    if (input$submitbutton > 0) { 
       isolate(datasetInput()) 
     } 
   })
