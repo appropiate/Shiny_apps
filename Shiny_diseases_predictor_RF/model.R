@@ -1,4 +1,4 @@
-## Random forest model
+# Classification tree model
 
 # Importing libraries
 library(randomForest)
