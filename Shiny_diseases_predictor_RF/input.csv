@@ -1,2 +1,2 @@
-Number of pregnancies:,Plasma glucose concentration:,Diastolic blood presure (mm Hg):,Triceps skin fold thickness (mm):,2 hour serum insulin (mu U/ml):,Body mass index:,Pedigree function:,Age:,0
-0,100,50,25,150,30,2,30,0
+pregnant,glucose,pressure,triceps,insulin,mass,pedigree,age
+0,90,40,15,100,24,2,25

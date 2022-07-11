@@ -12,6 +12,7 @@ library(shinythemes)
 library(rmarkdown)
 library(bookdown)
 library(knitr)
+library(data.table)
 
 # Set working directory
 setwd(dirname(rstudioapi::getSourceEditorContext()$path))
@@ -39,28 +40,28 @@ ui <- fluidPage(theme = shinytheme("united"),
                            sidebarPanel(
                              tags$h3("Inputs:"),
                              numericInput(inputId = "pregnant", 
-                                          label = "Number of pregnancies:", 
+                                          label = "Pregnant", 
                                           value = 0),
                              numericInput(inputId ="glucose", 
-                                          label = "Plasma glucose concentration:", 
+                                          label = "Glucose", 
                                           value = 100),
                              numericInput(inputId ="pressure", 
-                                          label ="Diastolic blood presure (mm Hg):", 
+                                          label ="Pressure", 
                                           value = 50),
                              numericInput(inputId ="triceps", 
-                                          label ="Triceps skin fold thickness (mm):", 
+                                          label ="Triceps", 
                                           value = 25),
                              numericInput(inputId ="insulin", 
-                                          label ="2 hour serum insulin (mu U/ml):", 
+                                          label ="Insulin", 
                                           value = 150),
                              numericInput(inputId ="mass",
-                                          label ="Body mass index:", 
+                                          label ="Mass", 
                                           value = 30),
                              numericInput(inputId ="pedigree", 
-                                          label ="Pedigree function:", 
+                                          label ="Pedigree", 
                                           value = 2),
                              numericInput(inputId ="age", 
-                                          label ="Age:", 
+                                          label ="Age", 
                                           value = 30),
                              actionButton(inputId ="submitbutton",
                                           label ="Submit", 
@@ -75,7 +76,7 @@ ui <- fluidPage(theme = shinytheme("united"),
                            ), # Navbar 1, tabPanel
                   
                   tabPanel("About", 
-                           titlePanel("About"), 
+                           titlePanel(""), 
                            withMathJax(includeMarkdown("about.md"))
                   )
                            )#tabPanel(), About
@@ -90,18 +91,21 @@ ui <- fluidPage(theme = shinytheme("united"),
 
 # Define server logic required obtain predictions of probabilities of patient having diabetes
 server <- function(input, output) {
+  
   # Input Data
   datasetInput <- reactive({  
     
     df <- data.frame(
-      Name = c("Number of pregnancies:",
-               "Plasma glucose concentration:",
-               "Diastolic blood presure (mm Hg):",
-               "Triceps skin fold thickness (mm):",
-               "2 hour serum insulin (mu U/ml):",
-               "Body mass index:",
-               "Pedigree function:",
-               "Age:"),
+      # variable names in dataset
+      Name = c("pregnant",
+               "glucose",
+               "pressure",
+               "triceps",
+               "insulin",
+               "mass",
+               "pedigree",
+               "age"),
+      # Values for variables  specified in inputs
       Value = as.character(c(input$pregnant,
                              input$glucose,
                              input$pressure,
@@ -109,17 +113,17 @@ server <- function(input, output) {
                              input$insulin,
                              input$mass,
                              input$pedigree,
-                             input$age),
-      stringsAsFactors = FALSE))
+                             input$age)),
+      stringsAsFactors = FALSE)
     
-     diabetes <- 0
-     df <- rbind(df, diabetes)
+     # diabetes <- 0
+     # df <- rbind(df, diabetes)
     input <- transpose(df)
     write.table(input,"input.csv", sep=",", quote = FALSE, row.names = FALSE, col.names = FALSE)
     
     test <- read.csv(paste("input", ".csv", sep=""), header = TRUE)
     
-    Output <- data.frame(Prediction=predict(model,test), round(predict(model,test,type="prob"), 3))
+    Output <- data.frame("Diabetes"=predict(model,test), round(predict(model,test,type="prob"), 3))
     print(Output)
     
   })

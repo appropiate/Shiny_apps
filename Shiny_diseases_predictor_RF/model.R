@@ -11,14 +11,14 @@ setwd(dirname(rstudioapi::getSourceEditorContext()$path))
 
 
 # Importing the df dataset
-df <- read.csv("diabetes.txt", stringsAsFactors = TRUE)
+diabetes <- read.csv("diabetes.txt", stringsAsFactors = TRUE)
 
 
 # Performs stratified random split of the data set
 set.seed(123)
-TrainingIndex <- createDataPartition(df$age, p=0.75, list = FALSE)
-TrainingSet <- df[TrainingIndex,] # Training Set
-TestingSet <- df[-TrainingIndex,] # Test Set
+TrainingIndex <- createDataPartition(diabetes$age, p=0.75, list = FALSE)
+TrainingSet <- diabetes[TrainingIndex,] # Training Set
+TestingSet <- diabetes[-TrainingIndex,] # Test Set
 
 write.csv(TrainingSet, "training.csv")
 write.csv(TestingSet, "testing.csv")
@@ -26,10 +26,10 @@ write.csv(TestingSet, "testing.csv")
 # Building models:
 
 # Random forest model
-# model <- randomForest(diabetes ~ ., data = TrainingSet, ntree = 500, mtry = 4, importance = TRUE)
+# model <- randomForest( ~ ., data = TrainingSet, ntree = 500, mtry = 4, importance = TRUE)
 
 # Decision tree
-model<- C5.0(df[,1:8],df[,9],trials = 10)
+model<- C5.0(diabetes[,-9], diabetes[,"diabetes"],trials = 10)
 
 # Save model to RDS file 
 saveRDS(model, "model.rds")

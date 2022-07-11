@@ -46,7 +46,7 @@ setwd(dirname(rstudioapi::getSourceEditorContext()$path))
 ```
 
 
-### Summary of data used to build Decision tree model
+#### Summary of data used to build Decision tree model
 ```{r }
 # Importing the df dataset
 df <- read.csv("diabetes.txt", stringsAsFactors = TRUE)
@@ -74,7 +74,7 @@ TestingSet <- TestingSet[,-1]
 model.predict <- predict(model,TestingSet) 
 ```
 
-### Algorithm performance
+#### Algorithm performance
 ```{r }
 
 # Model Performance
@@ -82,6 +82,6 @@ model.predict <- predict(model,TestingSet)
                 reference = TestingSet$diabetes))
 ```
 
-# References
+### References
 
 
