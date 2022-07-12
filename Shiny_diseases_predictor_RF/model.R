@@ -12,7 +12,7 @@ setwd(dirname(rstudioapi::getSourceEditorContext()$path))
 
 # Importing the df dataset
 diabetes <- read.csv("diabetes.txt", stringsAsFactors = TRUE)
-
+levels(diabetes$diabetes) <- c("Negative", "Positive")
 
 # Performs stratified random split of the data set
 set.seed(123)

@@ -17,9 +17,6 @@ library(data.table)
 # Set working directory
 setwd(dirname(rstudioapi::getSourceEditorContext()$path))
 
-#Loading dataset
-df1 <- read.csv("diabetes.txt", stringsAsFactors = TRUE)
-
 # Read in the RF model
 model <- readRDS("model.rds")
 
@@ -32,30 +29,31 @@ sapply(rmdfiles, knit, quiet = T)
 ####################################
 
 # Define UI for application that draws a histogram
-ui <- fluidPage(theme = shinytheme("united"),
+ui <- fixedPage(theme = shinytheme("cerulean"),
+               
                 navbarPage(
-                  # theme = 'cerulean'
+                   theme = 'cerulean',
                   "Disease predictor",
-                  tabPanel("Diabetes",
+                  tabPanel("Diabetes predictor",
                            sidebarPanel(
                              tags$h3("Inputs:"),
-                             numericInput(inputId = "pregnant", 
-                                          label = "Pregnant", 
-                                          value = 0),
-                             numericInput(inputId ="glucose", 
-                                          label = "Glucose", 
-                                          value = 100),
-                             numericInput(inputId ="pressure", 
-                                          label ="Pressure", 
-                                          value = 50),
-                             numericInput(inputId ="triceps", 
-                                          label ="Triceps", 
-                                          value = 25),
+                                         numericInput(inputId = "pregnant", 
+                                              label = "Pregnancies", 
+                                              value = 0),
+                                       numericInput(inputId ="glucose", 
+                                                    label = "Glucose", 
+                                                    value = 100),
+                                       numericInput(inputId ="pressure", 
+                                                    label ="Dyastolic Pressure (mm Hg)", 
+                                                    value = 50),
+                                       numericInput(inputId ="triceps", 
+                                                    label ="Triceps Skin Fold (mm)", 
+                                                    value = 25),
                              numericInput(inputId ="insulin", 
                                           label ="Insulin", 
                                           value = 150),
                              numericInput(inputId ="mass",
-                                          label ="Mass", 
+                                          label ="Body Mass Index", 
                                           value = 30),
                              numericInput(inputId ="pedigree", 
                                           label ="Pedigree", 
@@ -65,12 +63,21 @@ ui <- fluidPage(theme = shinytheme("united"),
                                           value = 30),
                              actionButton(inputId ="submitbutton",
                                           label ="Submit", 
-                                          class = "btn btn-primary")
+                                          class = "btn btn-primary" ),
+                             column(6,
+                           
+                                     ),
+                             
+                             column(4, )  
+                                   
+                            
+                           
                            ), # sidebarPanel
                            mainPanel(
                                      tags$label(h3('Status/Output')), # Status/Output Text Box
                                      verbatimTextOutput('contents'),
-                                     tableOutput('tabledata') # Prediction results table
+                                     tableOutput('tabledata'), # Prediction results table
+                                    imageOutput("emoji")# emoji dependent on prediction
                           
                            ) # mainPanel
                            ), # Navbar 1, tabPanel
@@ -89,7 +96,7 @@ ui <- fluidPage(theme = shinytheme("united"),
 # Server                           #
 ####################################
 
-# Define server logic required obtain predictions of probabilities of patient having diabetes
+# Define server logic required to obtain predictions and probabilities of having diabetes
 server <- function(input, output) {
   
   # Input Data
@@ -121,19 +128,21 @@ server <- function(input, output) {
     input <- transpose(df)
     write.table(input,"input.csv", sep=",", quote = FALSE, row.names = FALSE, col.names = FALSE)
     
-    test <- read.csv(paste("input", ".csv", sep=""), header = TRUE)
+    test <<- read.csv(paste("input", ".csv", sep=""), header = TRUE)
     
-    Output <- data.frame("Diabetes"=predict(model,test), round(predict(model,test,type="prob"), 3))
+    Output <- as.data.frame(cbind(as.character(predict(model,test)),
+                    paste(100*round(predict(model,test,type="prob")[1],3),"%"),
+                    paste(100*round(predict(model,test,type="prob")[2],3),"%")))
+    colnames(Output) <- c("Diabetes prediction","No","Yes")
     print(Output)
-    
   })
   
   # Status/Output Text Box
   output$contents <- renderPrint({
     if (input$submitbutton > 0) { 
-      isolate("Calculation complete.") 
+      isolate("Diabetes prediction complete.") 
     } else {
-      return("Server is ready for calculation.")
+      return("Specify inputs and click on 'Submit'.")
     }
   })
   
@@ -144,9 +153,21 @@ server <- function(input, output) {
     } 
   })
   
-
-  
-} # server
+  # Emoji images
+    
+     output$emoji <- renderImage({
+       if (input$submitbutton > 0){
+    filename <- file.path('./www/sad_emoji.png')
+     list(src = filename, width = "100px" , height= "100px")}
+       else{
+         filename <- file.path('./www/happy_emoji.png')
+         list(src = filename, width = "100px" , height= "100px")
+       }},
+     deleteFile = FALSE)
+}   
+  # Return a list containing the filename
+     
+  # server
 
 # Run the application 
 shinyApp(ui = ui, server = server)

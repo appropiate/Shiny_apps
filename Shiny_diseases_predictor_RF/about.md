@@ -37,20 +37,13 @@ editor_options:
 #### Summary of data used to build Decision tree model
 
 ```
-    pregnant         glucose         pressure         triceps         insulin            mass          pedigree     
- Min.   : 0.000   Min.   : 56.0   Min.   : 24.00   Min.   : 7.00   Min.   : 14.00   Min.   :18.20   Min.   :0.0850  
- 1st Qu.: 1.000   1st Qu.: 99.0   1st Qu.: 62.00   1st Qu.:21.00   1st Qu.: 76.75   1st Qu.:28.40   1st Qu.:0.2697  
- Median : 2.000   Median :119.0   Median : 70.00   Median :29.00   Median :125.50   Median :33.20   Median :0.4495  
- Mean   : 3.301   Mean   :122.6   Mean   : 70.66   Mean   :29.15   Mean   :156.06   Mean   :33.09   Mean   :0.5230  
- 3rd Qu.: 5.000   3rd Qu.:143.0   3rd Qu.: 78.00   3rd Qu.:37.00   3rd Qu.:190.00   3rd Qu.:37.10   3rd Qu.:0.6870  
- Max.   :17.000   Max.   :198.0   Max.   :110.00   Max.   :63.00   Max.   :846.00   Max.   :67.10   Max.   :2.4200  
-      age        diabetes 
- Min.   :21.00   neg:262  
- 1st Qu.:23.00   pos:130  
- Median :27.00            
- Mean   :30.86            
- 3rd Qu.:36.00            
- Max.   :81.00            
+    pregnant         glucose         pressure         triceps         insulin            mass          pedigree           age        diabetes 
+ Min.   : 0.000   Min.   : 56.0   Min.   : 24.00   Min.   : 7.00   Min.   : 14.00   Min.   :18.20   Min.   :0.0850   Min.   :21.00   neg:262  
+ 1st Qu.: 1.000   1st Qu.: 99.0   1st Qu.: 62.00   1st Qu.:21.00   1st Qu.: 76.75   1st Qu.:28.40   1st Qu.:0.2697   1st Qu.:23.00   pos:130  
+ Median : 2.000   Median :119.0   Median : 70.00   Median :29.00   Median :125.50   Median :33.20   Median :0.4495   Median :27.00            
+ Mean   : 3.301   Mean   :122.6   Mean   : 70.66   Mean   :29.15   Mean   :156.06   Mean   :33.09   Mean   :0.5230   Mean   :30.86            
+ 3rd Qu.: 5.000   3rd Qu.:143.0   3rd Qu.: 78.00   3rd Qu.:37.00   3rd Qu.:190.00   3rd Qu.:37.10   3rd Qu.:0.6870   3rd Qu.:36.00            
+ Max.   :17.000   Max.   :198.0   Max.   :110.00   Max.   :63.00   Max.   :846.00   Max.   :67.10   Max.   :2.4200   Max.   :81.00            
 ```
 
 
@@ -62,9 +55,9 @@ editor_options:
 Confusion Matrix and Statistics
 
           Reference
-Prediction neg pos
-       neg  64   5
-       pos   3  24
+Prediction Negative Positive
+  Negative       64        5
+  Positive        3       24
                                           
                Accuracy : 0.9167          
                  95% CI : (0.8424, 0.9633)
@@ -84,7 +77,7 @@ Prediction neg pos
    Detection Prevalence : 0.7188          
       Balanced Accuracy : 0.8914          
                                           
-       'Positive' Class : neg             
+       'Positive' Class : Negative        
                                           
 ```
 
