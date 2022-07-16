@@ -60,15 +60,15 @@ setwd(dirname(rstudioapi::getSourceEditorContext()$path))
 
 
 # Read in the Decision tree model
-model <- readRDS("model.rds")
+model_diabetes <- readRDS("model_diabetes.rds")
 
 #Read data
-TestingSet <- read.csv("testing.csv", header = TRUE, stringsAsFactors = TRUE)
+TestingSet <- read.csv("testing_diabetes.csv", header = TRUE, stringsAsFactors = TRUE)
 TestingSet <- TestingSet[,-1]
 
 
 # Model predictions
-model.predict <- predict(model,TestingSet) 
+model.predict <- predict(model_diabetes,TestingSet) 
 ```
 
 ### Algorithm performance

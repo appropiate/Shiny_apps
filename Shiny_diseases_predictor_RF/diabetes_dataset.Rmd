@@ -36,43 +36,46 @@ library(C50) # Decision tree
 setwd(dirname(rstudioapi::getSourceEditorContext()$path))
 ```
 
+
+
+### **Summary of predictors in *diabetes* dataset**
 ```{css}
 .main-container {
     max-width: 100%;
 }
 ```
-
-### **Summary of data used to build Decision Tree model** 
 ```{r }
 # Importing the df dataset
 df <- read.csv("diabetes.txt", stringsAsFactors = TRUE)
+
 # knitr::kable(summary(df)) %>%   kable_styling(font_size = 12)
+
 a <-as.data.frame(apply(df[1:8],2,summary))
-kable(a, "html") %>%   kable_styling(full_width = F)
+kable(a, "html") %>%   kable_styling(full_width = F, position = "left")
 ```
 
+<!---### Decision Tree model---> 
 
-```{r evaluate = FALSE }
-## Decision Tree model
-
+```{r results='hide'}
 # Set working directory
 setwd(dirname(rstudioapi::getSourceEditorContext()$path))
 
 
 # Read in the Decision tree model
-model <- readRDS("model.rds")
+model_diabetes <- readRDS("model_diabetes.rds")
 
 #Read data
-TestingSet <- read.csv("testing.csv", header = TRUE, stringsAsFactors = TRUE)
+TestingSet <- read.csv("testing_diabetes.csv", header = TRUE, stringsAsFactors = TRUE)
 TestingSet <- TestingSet[,-1]
 
 
 # Model predictions
-model.predict <- predict(model,TestingSet) 
+model.predict <- predict(model_diabetes,TestingSet) 
+model.predict
 ```
 
-### Algorithm performance
-```{r }
+<!---### Algorithm performance---> 
+```{r results='hide'}
 
 # Model Performance
 (model.performance <- confusionMatrix(data = model.predict ,
@@ -82,6 +85,6 @@ model.predict <- predict(model,TestingSet)
 ```{r}
 ```
 
-### References
+### **References**
 
 

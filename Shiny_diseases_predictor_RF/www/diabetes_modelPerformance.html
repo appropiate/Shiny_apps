@@ -11,7 +11,7 @@
 
 
 
-<title>Diabetes predictor using Decision Tree algorithm</title>
+<title>diabetes_modelPerformance.knit</title>
 
 <script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
 // be compatible with the behavior of Pandoc < 2.8).
@@ -1497,230 +1497,6 @@ window.onload = function() {
   PagedTableDoc.initAll();
 };
 </script>
-<script>$(document).ready(function(){
-    if (typeof $('[data-toggle="tooltip"]').tooltip === 'function') {
-        $('[data-toggle="tooltip"]').tooltip();
-    }
-    if ($('[data-toggle="popover"]').popover === 'function') {
-        $('[data-toggle="popover"]').popover();
-    }
-});
-</script>
-<style type="text/css">
-.lightable-minimal {
-border-collapse: separate;
-border-spacing: 16px 1px;
-width: 100%;
-margin-bottom: 10px;
-}
-.lightable-minimal td {
-margin-left: 5px;
-margin-right: 5px;
-}
-.lightable-minimal th {
-margin-left: 5px;
-margin-right: 5px;
-}
-.lightable-minimal thead tr:last-child th {
-border-bottom: 2px solid #00000050;
-empty-cells: hide;
-}
-.lightable-minimal tbody tr:first-child td {
-padding-top: 0.5em;
-}
-.lightable-minimal.lightable-hover tbody tr:hover {
-background-color: #f5f5f5;
-}
-.lightable-minimal.lightable-striped tbody tr:nth-child(even) {
-background-color: #f5f5f5;
-}
-.lightable-classic {
-border-top: 0.16em solid #111111;
-border-bottom: 0.16em solid #111111;
-width: 100%;
-margin-bottom: 10px;
-margin: 10px 5px;
-}
-.lightable-classic tfoot tr td {
-border: 0;
-}
-.lightable-classic tfoot tr:first-child td {
-border-top: 0.14em solid #111111;
-}
-.lightable-classic caption {
-color: #222222;
-}
-.lightable-classic td {
-padding-left: 5px;
-padding-right: 5px;
-color: #222222;
-}
-.lightable-classic th {
-padding-left: 5px;
-padding-right: 5px;
-font-weight: normal;
-color: #222222;
-}
-.lightable-classic thead tr:last-child th {
-border-bottom: 0.10em solid #111111;
-}
-.lightable-classic.lightable-hover tbody tr:hover {
-background-color: #F9EEC1;
-}
-.lightable-classic.lightable-striped tbody tr:nth-child(even) {
-background-color: #f5f5f5;
-}
-.lightable-classic-2 {
-border-top: 3px double #111111;
-border-bottom: 3px double #111111;
-width: 100%;
-margin-bottom: 10px;
-}
-.lightable-classic-2 tfoot tr td {
-border: 0;
-}
-.lightable-classic-2 tfoot tr:first-child td {
-border-top: 3px double #111111;
-}
-.lightable-classic-2 caption {
-color: #222222;
-}
-.lightable-classic-2 td {
-padding-left: 5px;
-padding-right: 5px;
-color: #222222;
-}
-.lightable-classic-2 th {
-padding-left: 5px;
-padding-right: 5px;
-font-weight: normal;
-color: #222222;
-}
-.lightable-classic-2 tbody tr:last-child td {
-border-bottom: 3px double #111111;
-}
-.lightable-classic-2 thead tr:last-child th {
-border-bottom: 1px solid #111111;
-}
-.lightable-classic-2.lightable-hover tbody tr:hover {
-background-color: #F9EEC1;
-}
-.lightable-classic-2.lightable-striped tbody tr:nth-child(even) {
-background-color: #f5f5f5;
-}
-.lightable-material {
-min-width: 100%;
-white-space: nowrap;
-table-layout: fixed;
-font-family: Roboto, sans-serif;
-border: 1px solid #EEE;
-border-collapse: collapse;
-margin-bottom: 10px;
-}
-.lightable-material tfoot tr td {
-border: 0;
-}
-.lightable-material tfoot tr:first-child td {
-border-top: 1px solid #EEE;
-}
-.lightable-material th {
-height: 56px;
-padding-left: 16px;
-padding-right: 16px;
-}
-.lightable-material td {
-height: 52px;
-padding-left: 16px;
-padding-right: 16px;
-border-top: 1px solid #eeeeee;
-}
-.lightable-material.lightable-hover tbody tr:hover {
-background-color: #f5f5f5;
-}
-.lightable-material.lightable-striped tbody tr:nth-child(even) {
-background-color: #f5f5f5;
-}
-.lightable-material.lightable-striped tbody td {
-border: 0;
-}
-.lightable-material.lightable-striped thead tr:last-child th {
-border-bottom: 1px solid #ddd;
-}
-.lightable-material-dark {
-min-width: 100%;
-white-space: nowrap;
-table-layout: fixed;
-font-family: Roboto, sans-serif;
-border: 1px solid #FFFFFF12;
-border-collapse: collapse;
-margin-bottom: 10px;
-background-color: #363640;
-}
-.lightable-material-dark tfoot tr td {
-border: 0;
-}
-.lightable-material-dark tfoot tr:first-child td {
-border-top: 1px solid #FFFFFF12;
-}
-.lightable-material-dark th {
-height: 56px;
-padding-left: 16px;
-padding-right: 16px;
-color: #FFFFFF60;
-}
-.lightable-material-dark td {
-height: 52px;
-padding-left: 16px;
-padding-right: 16px;
-color: #FFFFFF;
-border-top: 1px solid #FFFFFF12;
-}
-.lightable-material-dark.lightable-hover tbody tr:hover {
-background-color: #FFFFFF12;
-}
-.lightable-material-dark.lightable-striped tbody tr:nth-child(even) {
-background-color: #FFFFFF12;
-}
-.lightable-material-dark.lightable-striped tbody td {
-border: 0;
-}
-.lightable-material-dark.lightable-striped thead tr:last-child th {
-border-bottom: 1px solid #FFFFFF12;
-}
-.lightable-paper {
-width: 100%;
-margin-bottom: 10px;
-color: #444;
-}
-.lightable-paper tfoot tr td {
-border: 0;
-}
-.lightable-paper tfoot tr:first-child td {
-border-top: 1px solid #00000020;
-}
-.lightable-paper thead tr:last-child th {
-color: #666;
-vertical-align: bottom;
-border-bottom: 1px solid #00000020;
-line-height: 1.15em;
-padding: 10px 5px;
-}
-.lightable-paper td {
-vertical-align: middle;
-border-bottom: 1px solid #00000010;
-line-height: 1.15em;
-padding: 7px 5px;
-}
-.lightable-paper.lightable-hover tbody tr:hover {
-background-color: #F9EEC1;
-}
-.lightable-paper.lightable-striped tbody tr:nth-child(even) {
-background-color: #00000008;
-}
-.lightable-paper.lightable-striped tbody td {
-border: 0;
-}
-</style>
 
 <style type="text/css">
   code{white-space: pre-wrap;}
@@ -1746,28 +1522,6 @@ if (window.hljs) {
 
 
 
-<style type="text/css">
-/* for pandoc --citeproc since 2.11 */
-div.csl-bib-body { }
-div.csl-entry {
-  clear: both;
-}
-.hanging div.csl-entry {
-  margin-left:2em;
-  text-indent:-2em;
-}
-div.csl-left-margin {
-  min-width:2em;
-  float:left;
-}
-div.csl-right-inline {
-  margin-left:2em;
-  padding-left:1em;
-}
-div.csl-indent {
-  margin-left: 2em;
-}
-</style>
 
 
 
@@ -1878,267 +1632,46 @@ pre code {
 
 
 
-<h1 class="title toc-ignore">Diabetes predictor using Decision Tree
-algorithm</h1>
-<h4 class="author"></h4>
 
 </div>
 
 
+<!---### **Summary of predictors in *diabetes* dataset**--->
 <style type="text/css">
 .main-container {
     max-width: 100%;
 }
 </style>
-<div id="summary-of-data-used-to-build-decision-tree-model" class="section level3">
-<h3>Summary of data used to build Decision Tree model</h3>
-<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
-<thead>
-<tr>
-<th style="text-align:left;">
-</th>
-<th style="text-align:right;">
-pregnant
-</th>
-<th style="text-align:right;">
-glucose
-</th>
-<th style="text-align:right;">
-pressure
-</th>
-<th style="text-align:right;">
-triceps
-</th>
-<th style="text-align:right;">
-insulin
-</th>
-<th style="text-align:right;">
-mass
-</th>
-<th style="text-align:right;">
-pedigree
-</th>
-<th style="text-align:right;">
-age
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-Min.
-</td>
-<td style="text-align:right;">
-0.00000
-</td>
-<td style="text-align:right;">
-56.0000
-</td>
-<td style="text-align:right;">
-24.00000
-</td>
-<td style="text-align:right;">
-7.00000
-</td>
-<td style="text-align:right;">
-14.0000
-</td>
-<td style="text-align:right;">
-18.20000
-</td>
-<td style="text-align:right;">
-0.0850000
-</td>
-<td style="text-align:right;">
-21.0000
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-1st Qu.
-</td>
-<td style="text-align:right;">
-1.00000
-</td>
-<td style="text-align:right;">
-99.0000
-</td>
-<td style="text-align:right;">
-62.00000
-</td>
-<td style="text-align:right;">
-21.00000
-</td>
-<td style="text-align:right;">
-76.7500
-</td>
-<td style="text-align:right;">
-28.40000
-</td>
-<td style="text-align:right;">
-0.2697500
-</td>
-<td style="text-align:right;">
-23.0000
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Median
-</td>
-<td style="text-align:right;">
-2.00000
-</td>
-<td style="text-align:right;">
-119.0000
-</td>
-<td style="text-align:right;">
-70.00000
-</td>
-<td style="text-align:right;">
-29.00000
-</td>
-<td style="text-align:right;">
-125.5000
-</td>
-<td style="text-align:right;">
-33.20000
-</td>
-<td style="text-align:right;">
-0.4495000
-</td>
-<td style="text-align:right;">
-27.0000
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Mean
-</td>
-<td style="text-align:right;">
-3.30102
-</td>
-<td style="text-align:right;">
-122.6276
-</td>
-<td style="text-align:right;">
-70.66327
-</td>
-<td style="text-align:right;">
-29.14541
-</td>
-<td style="text-align:right;">
-156.0561
-</td>
-<td style="text-align:right;">
-33.08622
-</td>
-<td style="text-align:right;">
-0.5230459
-</td>
-<td style="text-align:right;">
-30.8648
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-3rd Qu.
-</td>
-<td style="text-align:right;">
-5.00000
-</td>
-<td style="text-align:right;">
-143.0000
-</td>
-<td style="text-align:right;">
-78.00000
-</td>
-<td style="text-align:right;">
-37.00000
-</td>
-<td style="text-align:right;">
-190.0000
-</td>
-<td style="text-align:right;">
-37.10000
-</td>
-<td style="text-align:right;">
-0.6870000
-</td>
-<td style="text-align:right;">
-36.0000
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Max.
-</td>
-<td style="text-align:right;">
-17.00000
-</td>
-<td style="text-align:right;">
-198.0000
-</td>
-<td style="text-align:right;">
-110.00000
-</td>
-<td style="text-align:right;">
-63.00000
-</td>
-<td style="text-align:right;">
-846.0000
-</td>
-<td style="text-align:right;">
-67.10000
-</td>
-<td style="text-align:right;">
-2.4200000
-</td>
-<td style="text-align:right;">
-81.0000
-</td>
-</tr>
-</tbody>
-</table>
-</div>
+<!---### Decision Tree model--->
 <div id="algorithm-performance" class="section level3">
-<h3>Algorithm performance</h3>
+<h3><strong>Algorithm performance</strong></h3>
 <pre><code>Confusion Matrix and Statistics
 
           Reference
 Prediction Negative Positive
-  Negative       64        5
-  Positive        3       24
+  Negative       56       10
+  Positive       11       19
                                           
-               Accuracy : 0.9167          
-                 95% CI : (0.8424, 0.9633)
+               Accuracy : 0.7812          
+                 95% CI : (0.6853, 0.8592)
     No Information Rate : 0.6979          
-    P-Value [Acc &gt; NIR] : 2.069e-07       
+    P-Value [Acc &gt; NIR] : 0.0447          
                                           
-                  Kappa : 0.7984          
+                  Kappa : 0.4862          
                                           
- Mcnemar&#39;s Test P-Value : 0.7237          
+ Mcnemar&#39;s Test P-Value : 1.0000          
                                           
-            Sensitivity : 0.9552          
-            Specificity : 0.8276          
-         Pos Pred Value : 0.9275          
-         Neg Pred Value : 0.8889          
+            Sensitivity : 0.8358          
+            Specificity : 0.6552          
+         Pos Pred Value : 0.8485          
+         Neg Pred Value : 0.6333          
              Prevalence : 0.6979          
-         Detection Rate : 0.6667          
-   Detection Prevalence : 0.7188          
-      Balanced Accuracy : 0.8914          
+         Detection Rate : 0.5833          
+   Detection Prevalence : 0.6875          
+      Balanced Accuracy : 0.7455          
                                           
        &#39;Positive&#39; Class : Negative        
                                           </code></pre>
-</div>
-<div id="references" class="section level3 unnumbered">
-<h3 class="unnumbered">References</h3>
-<div id="refs" class="references csl-bib-body hanging-indent">
-<div id="ref-lantz2015machine" class="csl-entry">
-Lantz, Brett. 2015. <em>Machine Learning with r</em>. Packt Publishing
-Ltd.
-</div>
-</div>
 </div>
 
 

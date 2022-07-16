@@ -1,5 +1,5 @@
 ---
-title: ' '
+title: 'Diabetes predictor using Decision Tree algorithm'
 subtitle: ""
 
 author: ""
@@ -25,7 +25,7 @@ editor_options:
 
 
 
-### **Summary of data used to build Decision Tree model** 
+### Summary of data used to build Decision Tree model 
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
  <thead>
   <tr>
