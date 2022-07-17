@@ -12,8 +12,10 @@ library(shinythemes)
 library(rmarkdown)
 library(bookdown)
 library(knitr)
+library(huxtable)
 library(data.table)
 library(DT)
+library(C50)
 
 # Set working directory
 setwd(dirname(rstudioapi::getSourceEditorContext()$path))
@@ -27,14 +29,15 @@ model_diabetes <- readRDS("model_diabetes.rds")
 
 # Define UI for application that draws a histogram
 ui <- fluidPage(title = "Hola",
-        tags$style(
-          "#status {font-size:15px;
+        tags$style( # output styles
+          "#status {font-size:18px;
           color:black;
+          font-weight: bold;
           display:block; }"),
         theme = shinytheme("sandstone"),
         navbarPage(
            #theme = 'sandstone',
-           "Predictors:",
+           "PREDICTORS:",
            tabPanel("Diabetes",
                     sidebarPanel(
                      tags$h3("Predictor inputs:"),
@@ -73,22 +76,28 @@ ui <- fluidPage(title = "Hola",
                                          
                               # Tabsets  in mainPanel----     
                                tabPanel("Prediction",
-                                         HTML('<h3> <b> Status/Output of the prediction </b> </h3>'
+                                         HTML('<h3> <b> Status/Output of the prediction for diabetes</b> </h3>'
                                          ), # Status/Output Text Box
-                                         verbatimTextOutput('contents'),
+                                        # verbatimTextOutput('contents'),
                                          textOutput("status"),
+                                         HTML("<br>"),
                                          tableOutput('tabledata'), # Prediction results table
-                                         textOutput("explanation", container = span),
+                                        # textOutput("explanation", container = span),
+                                         HTML("<br>"),
                                          HTML("<br>"),
                                          imageOutput("emoji")   # emoji dependent on prediction)
                                         ), # Tabpanel
                                
                                tabPanel("Dataset",
                                         HTML("<br>"),
+                                        HTML("<br>"),
+                                        HTML('<h3> <b> Browse through the data </b> </h3>'),
+                                        HTML("<br>"),
                                         DT::dataTableOutput("diabetes_table"),
                                         HTML("<br>"),
+                                        HTML("<br>"),
                                         tags$iframe(src = "diabetes_summary.html",
-                                                    width="120%", height="400",
+                                                    width="100%", height="500",
                                                     scrolling="no",
                                                     seamless="seamless",
                                                     frameBorder="0")
@@ -96,7 +105,7 @@ ui <- fluidPage(title = "Hola",
                                          
                                tabPanel("Prediction algorithm",
                                         tags$iframe(src = "diabetes_modelPerformance.html",
-                                                    width="50%", height="700",
+                                                    width="100%", height="800",
                                                     scrolling="no",
                                                     seamless="seamless",
                                                     frameBorder="0")    
@@ -110,7 +119,7 @@ ui <- fluidPage(title = "Hola",
            
                navbarMenu("About",
                           tabPanel("Contact us"),
-                          tabPanel("Algorithm" )) #NavbarMenu
+                          tabPanel("Disclaimer" )) #NavbarMenu
               ) # NavbarPage  
         
             ) # fluidPage
@@ -152,30 +161,54 @@ server <- function(input, output,session) {
     input <- transpose(df)
     write.table(input,"input.csv", sep=",", quote = FALSE, row.names = FALSE, col.names = FALSE)
     
-    test <<- read.csv(paste("input", ".csv", sep=""), header = TRUE)
+    test <- read.csv(paste("input", ".csv", sep=""), header = TRUE)
     
-    Output <- as.data.frame(cbind(as.character(predict(model_diabetes,test)),
-                            paste(100*round(predict(model_diabetes,test,type="prob")[1],3),"%"),
-                            paste(100*round(predict(model_diabetes,test,type="prob")[2],3),"%")))
+    Output <- as.data.frame(cbind(as.character(predict(model_diabetes,test)), # prediction
+                            paste(100*round(predict(model_diabetes,test,type="prob")[1],3),"%"), # "No" probability
+                            paste(100*round(predict(model_diabetes,test,type="prob")[2],3),"%"))) # "Yes" probability
     
-    colnames(Output) <- c("Diabetes prediction","No","Yes")
+    colnames(Output) <- c("Diabetes prediction","'No' probability","'Yes' probability")
     print(Output)
     
 
     
   })
   ## TabPanel "Prediction"
-      # Status/Output Text Box
-      output$contents <- renderPrint({
-                            if (input$submitbutton > 0) { 
-                               output$status <- renderText("Diabetes prediction complete.") 
-                               output$explanation <- renderText("this text should show below the prediction")   # Explanation text
-                                
-                           } else {
-                            output$status <- renderText("Specify inputs and click on 'Submit'.")
-                            
-                                   }
-                           })
+  positive.prob <- predict(model_diabetes,test,type="prob")[2]
+  
+  
+   
+  
+  # Status/Output Text Box
+  output$status <- if (input$submitbutton > 0 ) { 
+    renderText("Diabetes prediction complete!") 
+  } else {
+    renderText( "Specify inputs for each predictor and click on 'Submit'!")
+  }
+  
+  
+  
+      # output$contents <- renderPrint({
+      #                       if (input$submitbutton > 0 &
+      #                           positive.prob > 0.6) { 
+      #                            output$status <- renderText("Diabetes prediction complete!") 
+      #                            output$explanation <- renderText("You possibly have diabetes, inform and confirm with your doctor!")   # Explanation text
+      #                           
+      #                       } else if(input$submitbutton > 0 & 
+      #                                 positive.prob < 0.6 &
+      #                                 positive.prob > 0.4){
+      #                                   output$status <- renderText("Diabetes prediction complete!") 
+      #                                   output$explanation <- renderText("Not so sure if you have diabetes, consult your doctor!")
+      #                       } else if(input$submitbutton > 0 & 
+      #                                 positive.prob < 0.4){
+      #                                   output$status <- renderText("Diabetes prediction complete!") 
+      #                                   output$explanation <- renderText("You possibly do not have diabetes, confirm with your doctor!")
+      #                              }
+      #                        else {
+      #                         output$status <- renderText("Specify inputs for each predictor and click on 'Submit'!")
+      #                       
+      #                              }
+      #                      })
 
       # Prediction results table
         output$tabledata <- renderTable({
@@ -186,7 +219,8 @@ server <- function(input, output,session) {
       
       # Emoji images
          output$emoji <- renderImage({
-                           if (input$submitbutton > 0){
+                           if (input$submitbutton > 0 
+                              ){
                              filename <- file.path('./www/sad_emoji.png')
                              list(src = filename, 
                                         width = "100px" ,

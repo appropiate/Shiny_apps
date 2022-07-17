@@ -12,8 +12,9 @@ header-includes:
  \usepackage{float}
  \floatplacement{figure}{H}
 nocite: |
-  @lantz2015machine
-link-citations: no
+link-citations: yes
+bibliography: diabetes_citations.bib
+csl: biomed-central.csl
 editor_options: 
   chunk_output_type: console
 ---
@@ -21,6 +22,8 @@ editor_options:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE, comment = NA, message = FALSE, warning = FALSE)
 ```
+
+
 
 ```{r }
 # Importing libraries
@@ -35,14 +38,15 @@ library(C50) # Decision tree
 setwd(dirname(rstudioapi::getSourceEditorContext()$path))
 ```
 
+This dataset is originally from the National Institute of Diabetes and Digestive and Kidney Diseases. The objective of the dataset is to diagnostically predict whether or not a patient has diabetes, based on certain diagnostic measurements included in the dataset. Several constraints were placed on the selection of these instances from a larger database. In particular, all patients here are **females at least 21 years old of Pima Indian heritage** @diabetesKaggle2022.
 
-
-### **Summary of predictors in *diabetes* dataset**
+### **Summary for predictors in the *diabetes* dataset**
 ```{css}
 .main-container {
     max-width: 100%;
 }
 ```
+
 ```{r }
 # Importing the df dataset
 df <- read.csv("diabetes.txt", stringsAsFactors = TRUE)
@@ -50,7 +54,7 @@ df <- read.csv("diabetes.txt", stringsAsFactors = TRUE)
 # knitr::kable(summary(df)) %>%   kable_styling(font_size = 12)
 
 a <-as.data.frame(apply(df[1:8],2,summary))
-kable(a, "html") %>%   kable_styling(full_width = F, position = "left")
+kable(a, "html") %>%   kable_styling(full_width = T, position = "left")
 ```
 
 <!---### Decision Tree model---> 
@@ -80,7 +84,7 @@ model.predict
 (model.performance <- confusionMatrix(data = model.predict ,
                 reference = TestingSet$diabetes))
 ```
-
+### **References**
 ```{r}
 ```
 

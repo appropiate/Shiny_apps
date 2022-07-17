@@ -1522,6 +1522,28 @@ if (window.hljs) {
 
 
 
+<style type="text/css">
+/* for pandoc --citeproc since 2.11 */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
 
 
 
@@ -1642,9 +1664,13 @@ pre code {
     max-width: 100%;
 }
 </style>
-<!---### Decision Tree model--->
 <div id="algorithm-performance" class="section level3">
 <h3><strong>Algorithm performance</strong></h3>
+<p>This prediction model was built in R using the diabetes data set and
+the decision tree algorithm C5.0 from the package C50 <span class="citation">[<a href="#ref-KuhnMax2022" role="doc-biblioref">1</a>]</span>. The code used to build this
+predictor and the rest of this Shiny app is available in <a href="https://github.com/appropiate/Shiny_apps/tree/main/Shiny_diseases_predictor_RF" title="Go to www.github.com">GitHub</a>. The confusion matrix for the
+test dataset as well as different performance metrics can be found
+below:</p>
 <pre><code>Confusion Matrix and Statistics
 
           Reference
@@ -1661,17 +1687,26 @@ Prediction Negative Positive
                                           
  Mcnemar&#39;s Test P-Value : 1.0000          
                                           
-            Sensitivity : 0.8358          
-            Specificity : 0.6552          
-         Pos Pred Value : 0.8485          
-         Neg Pred Value : 0.6333          
-             Prevalence : 0.6979          
-         Detection Rate : 0.5833          
-   Detection Prevalence : 0.6875          
+            Sensitivity : 0.6552          
+            Specificity : 0.8358          
+         Pos Pred Value : 0.6333          
+         Neg Pred Value : 0.8485          
+             Prevalence : 0.3021          
+         Detection Rate : 0.1979          
+   Detection Prevalence : 0.3125          
       Balanced Accuracy : 0.7455          
                                           
-       &#39;Positive&#39; Class : Negative        
+       &#39;Positive&#39; Class : Positive        
                                           </code></pre>
+</div>
+<div id="references" class="section level3 unnumbered">
+<h3 class="unnumbered"><strong>References</strong></h3>
+<div id="refs" class="references csl-bib-body">
+<div id="ref-KuhnMax2022" class="csl-entry">
+1. Max Kuhn et al. Package C50, C5.0 decision trees and rule-based
+models; https://cran.r-project.org/web/packages/C50/C50.pdf. 2022.
+</div>
+</div>
 </div>
 
 

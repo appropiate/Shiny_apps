@@ -1746,6 +1746,28 @@ if (window.hljs) {
 
 
 
+<style type="text/css">
+/* for pandoc --citeproc since 2.11 */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
 
 
 
@@ -1860,15 +1882,22 @@ pre code {
 </div>
 
 
-<div id="summary-of-predictors-in-diabetes-dataset" class="section level3">
-<h3><strong>Summary of predictors in <em>diabetes</em>
+<p>This dataset is originally from the National Institute of Diabetes
+and Digestive and Kidney Diseases. The objective of the dataset is to
+diagnostically predict whether or not a patient has diabetes, based on
+certain diagnostic measurements included in the dataset. Several
+constraints were placed on the selection of these instances from a
+larger database. In particular, all patients here are <strong>females at
+least 21 years old of Pima Indian heritage</strong> <span class="citation">[<a href="#ref-diabetesKaggle2022" role="doc-biblioref">1</a>]</span>.</p>
+<div id="summary-for-predictors-in-the-diabetes-dataset" class="section level3">
+<h3><strong>Summary for predictors in the <em>diabetes</em>
 dataset</strong></h3>
 <style type="text/css">
 .main-container {
     max-width: 100%;
 }
 </style>
-<table class="table" style="width: auto !important; ">
+<table class="table" style>
 <thead>
 <tr>
 <th style="text-align:left;">
@@ -2078,6 +2107,15 @@ Max.
 </table>
 <!---### Decision Tree model--->
 <!---### Algorithm performance--->
+</div>
+<div id="references" class="section level3 unnumbered">
+<h3 class="unnumbered"><strong>References</strong></h3>
+<div id="refs" class="references csl-bib-body">
+<div id="ref-diabetesKaggle2022" class="csl-entry">
+1. Kaggle.com. Pima indians diabetes database;
+https://www.kaggle.com/datasets/uciml/pima-indians-diabetes-database.
+</div>
+</div>
 </div>
 
 
