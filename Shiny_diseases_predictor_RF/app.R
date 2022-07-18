@@ -11,6 +11,9 @@ library(shiny)
 library(stringr)
 library(shinythemes)
 library(rmarkdown)
+library(ggfortify)
+library
+library(dplyr)
 library(knitr)
 library(data.table)
 library(DT)
@@ -124,8 +127,7 @@ ui <- fluidPage(
                                                         "Insulin (U/mL)" = "insulin", 
                                                         "BMI (Kg/m2)" = "mass", 
                                                         "Pedigree function" = "pedigree", 
-                                                        "Age (years)" = "age", 
-                                                        "Diabetic" = "diabetes"),
+                                                        "Age (years)" = "age"),
                                             selected = "glucose"),
                                 plotOutput("myplot", 
                                            width="100%", 
@@ -335,13 +337,21 @@ server <- function(input, output,session) {
          }else{
            y_label <- "Age (years)"
          }
-       
+  
+       Color <- match(input$boxplot , c("pregnant",
+                                        "glucose", 
+                                        "pressure", 
+                                        "triceps", 
+                                        "insulin", 
+                                        "mass", 
+                                        "pedigree", 
+                                        "age"))
        par(mar=c(10,5,3,10)) 
        
        boxplot( 
          get(input$boxplot)~ diabetes , 
           data=diabetes.dataset, 
-          col = "red", 
+          col = Color + 1, 
           xlab = "Diabetic",
           ylab = y_label,
           main = "Non-diabetic vs diabetic patients",
