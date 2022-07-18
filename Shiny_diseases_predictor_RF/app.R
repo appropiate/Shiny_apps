@@ -12,7 +12,6 @@ library(stringr)
 library(shinythemes)
 library(rmarkdown)
 library(ggfortify)
-library
 library(dplyr)
 library(knitr)
 library(data.table)
@@ -25,6 +24,7 @@ setwd(dirname(rstudioapi::getSourceEditorContext()$path))
 # Read in dataset and the RF model_diabetes
 diabetes.dataset <- read.csv("diabetes.txt", stringsAsFactors = T)
 levels(diabetes.dataset$diabetes) <- c("No", "Yes")
+
 model_diabetes <- readRDS("model_diabetes.rds")
 
 
@@ -54,7 +54,8 @@ ui <- fluidPage(
         theme = shinytheme("sandstone"),
         navbarPage(
            #theme = 'sandstone',
-           "HEALTH PREDICTORS:",
+         "HEALTH PREDICTORS:",
+         id="MainNavBar",
          tabPanel("Diabetes",
                   sidebarPanel(
                    tags$h3("Predictor inputs:"),
@@ -106,8 +107,17 @@ ui <- fluidPage(
                                  HTML("<br>"),
                                  HTML("<br>"),
                                  imageOutput("emoji"),# emoji dependent on prediction)
-                                 # actionLink("link_to_disclaimer", "About")
-                                ), # Tabpanel
+                                 actionLink("link_to_disclaimer", "Disclaimer")
+                                ), # TabPanel
+                      
+                      tabPanel("Prediction algorithm",
+                               tags$iframe(
+                                 src = "diabetes_modelPerformance.html",
+                                 width="100%", height="800",
+                                 scrolling="no",
+                                 seamless="seamless",
+                                 frameBorder="0")   
+                      ),# TabPanel
                        
                        tabPanel("Dataset",
                                 hr(),
@@ -131,7 +141,7 @@ ui <- fluidPage(
                                             selected = "glucose"),
                                 plotOutput("myplot", 
                                            width="100%", 
-                                           height="550",),
+                                           height="550"),
                                 HTML("<br>"),
                                 HTML("<br>"),
                                 HTML('<h3> <b> Browse through the data </b> </h3>'),
@@ -141,16 +151,7 @@ ui <- fluidPage(
                                 HTML("<br>")
                                 
                                 
-                               ), # TabPanel
-                                 
-                       tabPanel("Prediction algorithm",
-                                tags$iframe(
-                                  src = "diabetes_modelPerformance.html",
-                                  width="100%", height="800",
-                                  scrolling="no",
-                                  seamless="seamless",
-                                  frameBorder="0")   
-                                )
+                               )
                      
                 
                               ) # tabsetPanel  
@@ -213,7 +214,7 @@ server <- function(input, output,session) {
     input <- transpose(df)
     write.table(input,"input.csv", sep=",", quote = FALSE, row.names = FALSE, col.names = FALSE)
     
-    test <<- read.csv("input.csv", header = TRUE)
+    test <- read.csv("input.csv", header = TRUE)
     positive.prob <<- predict(model_diabetes,test,type="prob")[2]
     
     Output <- as.data.frame(cbind(as.character(predict(model_diabetes,test)), # prediction
@@ -246,7 +247,10 @@ server <- function(input, output,session) {
                         })
     
   # Explanation of prediction
-    output$explanation <- renderText(
+    output$explanation <- renderText({
+                            test <- read.csv("input.csv", header = TRUE)
+                            positive.prob <<- predict(model_diabetes,test,type="prob")[2]
+      
                             if (input$submitbutton > 0 &
                                 positive.prob > 0.6) {
                                   ("<span style=\"color:red\">Looks like you have diabetes,
@@ -262,7 +266,7 @@ server <- function(input, output,session) {
                                           confirm with your doctor!</span>")
                                       
                               }
-                           )        
+                           })        
     
   
   # Emoji images
@@ -304,11 +308,11 @@ server <- function(input, output,session) {
                        deleteFile = FALSE
                        )
      
-     # Disclaimer link
-     # observeEvent(input$link_to_disclaimer, {
-     #   newvalue <- "Disclaimer"
-     #   updateNavbarPage(session, "panels", newvalue)
-     # })
+     #Disclaimer link
+     observeEvent(input$link_to_disclaimer, {
+       newvalue <- "Disclaimer"
+       updateNavbarPage(session,inputId="MainNavBar", selected = "Disclaimer")
+     })
      
   ## TabPanel "DATASET"
      
@@ -347,18 +351,21 @@ server <- function(input, output,session) {
                                         "pedigree", 
                                         "age"))
        par(mar=c(10,5,3,10)) 
+       pval <-t.test(diabetes.dataset[diabetes.dataset$diabetes == "No",input$boxplot],
+                      diabetes.dataset[diabetes.dataset$diabetes == "Yes",input$boxplot])$p.value
+       pval <- signif(pval, digits = 3)
        
        boxplot( 
-         get(input$boxplot)~ diabetes , 
+         get(input$boxplot) ~ diabetes, 
           data=diabetes.dataset, 
           col = Color + 1, 
           xlab = "Diabetic",
           ylab = y_label,
-          main = "Non-diabetic vs diabetic patients",
+          main = bquote(bold("Non-diabetic vs diabetic patients,") ~ italic("pval") ~ .("<") ~ .(pval)),
           cex.main = 1.5,
           cex.lab = 2,
           cex.axis = 1.5)
-     }, 
+ ?brus     }, 
      height = 600, 
      width = 700)
 
