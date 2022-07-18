@@ -8,11 +8,10 @@
 #
 
 library(shiny)
+library(stringr)
 library(shinythemes)
 library(rmarkdown)
-library(bookdown)
 library(knitr)
-library(huxtable)
 library(data.table)
 library(DT)
 library(C50)
@@ -20,114 +19,165 @@ library(C50)
 # Set working directory
 setwd(dirname(rstudioapi::getSourceEditorContext()$path))
 
-# Read in the RF model_diabetes
+# Read in dataset and the RF model_diabetes
+diabetes.dataset <- read.csv("diabetes.txt", stringsAsFactors = T)
+levels(diabetes.dataset$diabetes) <- c("No", "Yes")
 model_diabetes <- readRDS("model_diabetes.rds")
 
-####################################
-# User interface                   #
-####################################
+
+###################################################################################
+# User interface                   
+###################################################################################
 
 # Define UI for application that draws a histogram
-ui <- fluidPage(title = "Hola",
+ui <- fluidPage(
+        title = "Hola",
         tags$style( # output styles
-          "#status {font-size:18px;
+          "#status {
+          font-size:18px;
           color:black;
           font-weight: bold;
           display:block; }"),
+        tags$style( # output styles
+          "#explanation {
+          font-size:22px;
+          color:black;
+          font-weight: bold;
+          display:block; }"),
+        tags$style( # output styles
+          "#emoji {
+          width = 10px; }"),
+        
         theme = shinytheme("sandstone"),
         navbarPage(
            #theme = 'sandstone',
-           "PREDICTORS:",
-           tabPanel("Diabetes",
-                    sidebarPanel(
-                     tags$h3("Predictor inputs:"),
-                     numericInput(inputId = "pregnant", 
-                                  label = "Pregnancies", 
-                                  value = 0),
-                     numericInput(inputId ="glucose", 
-                                  label = "Glucose", 
-                                  value = 100),
-                     numericInput(inputId ="pressure", 
-                                  label ="Dyastolic Pressure (mm Hg)", 
-                                  value = 50),
-                     numericInput(inputId ="triceps", 
-                                  label ="Triceps Skin Fold (mm)", 
-                                  value = 25),
-                     numericInput(inputId ="insulin", 
-                                  label ="Insulin", 
-                                  value = 150),
-                     numericInput(inputId ="mass",
-                                  label ="Body Mass Index", 
-                                  value = 30),
-                     numericInput(inputId ="pedigree", 
-                                  label ="Pedigree", 
-                                  value = 2),
-                     numericInput(inputId ="age", 
-                                  label ="Age", 
-                                  value = 30),
-                     actionButton(inputId ="submitbutton",
-                                  label ="Submit", 
-                                  class = "btn btn-primary" ),
-                    ), # sidebarPanel
+           "HEALTH PREDICTORS:",
+         tabPanel("Diabetes",
+                  sidebarPanel(
+                   tags$h3("Predictor inputs:"),
+                   sliderInput(inputId = "pregnant", 
+                                label = "Pregnancies", 
+                                min = 0, 
+                                max = 20,
+                                value = 0),
+                   numericInput(inputId ="glucose", 
+                                label = "Fasting glucose (mg/dL)", 
+                                value = 100),
+                   numericInput(inputId ="pressure", 
+                                label ="Dyastolic Pressure (mm Hg)", 
+                                value = 50),
+                   numericInput(inputId ="triceps", 
+                                label ="Triceps Skin Fold (mm)", 
+                                value = 25),
+                   numericInput(inputId ="insulin", 
+                                label ="Insulin (U/mL)", 
+                                value = 150),
+                   numericInput(inputId ="mass",
+                                label ="Body Mass Index (kg/m2)", 
+                                value = 30),
+                   numericInput(inputId ="pedigree", 
+                                label ="Diabetes pedigree function", 
+                                value = 2),
+                   numericInput(inputId ="age", 
+                                label ="Age", 
+                                value = 30),
+                   actionButton(inputId ="submitbutton",
+                                label ="Submit",
+                                class = "btn btn-primary" ),
+                  ), # sidebarPanel
+                                 
+                 mainPanel(
+                   
+                     tabsetPanel(type = "tabs",
+                                 id = "panels",
+                                 
+                      # Tabsets  in mainPanel----     
+                       tabPanel("Prediction",
+                                 HTML('<h3> <b> Status/Output of the prediction for diabetes:</b> </h3>'
+                                 ), # Status/Output Text Box
+                                 # verbatimTextOutput('contents'),
+                                 textOutput("status"),
+                                 HTML("<br>"),
+                                 tableOutput('tabledata'), # Prediction results table
+                                 htmlOutput("explanation", container = span),
+                                 HTML("<br>"),
+                                 HTML("<br>"),
+                                 imageOutput("emoji"),# emoji dependent on prediction)
+                                 # actionLink("link_to_disclaimer", "About")
+                                ), # Tabpanel
+                       
+                       tabPanel("Dataset",
+                                hr(),
+                                tags$iframe(
+                                  src = "diabetes_summary.html",
+                                  width="100%", 
+                                  height="500",
+                                  scrolling="no",
+                                  seamless="seamless",
+                                  frameBorder="0"),
+                                selectInput("boxplot",
+                                            "Predictor to plot against diabetes", 
+                                            choices = c("Pregnancies"= "pregnant",
+                                                        "Fasting glucose (mg/dL)" = "glucose", 
+                                                        "Pressure (mm Hg)" = "pressure", 
+                                                        "Triceps skin fold (mm)" = "triceps", 
+                                                        "Insulin (U/mL)" = "insulin", 
+                                                        "BMI (Kg/m2)" = "mass", 
+                                                        "Pedigree function" = "pedigree", 
+                                                        "Age (years)" = "age", 
+                                                        "Diabetic" = "diabetes"),
+                                            selected = "glucose"),
+                                plotOutput("myplot", 
+                                           width="100%", 
+                                           height="550",),
+                                HTML("<br>"),
+                                HTML("<br>"),
+                                HTML('<h3> <b> Browse through the data </b> </h3>'),
+                                HTML("<br>"),
+                                DT::dataTableOutput("diabetes_table"),
+                                HTML("<br>"),
+                                HTML("<br>")
+                                
+                                
+                               ), # TabPanel
+                                 
+                       tabPanel("Prediction algorithm",
+                                tags$iframe(
+                                  src = "diabetes_modelPerformance.html",
+                                  width="100%", height="800",
+                                  scrolling="no",
+                                  seamless="seamless",
+                                  frameBorder="0")   
+                                )
+                     
+                
+                              ) # tabsetPanel  
+                           )# mainPanel
                                    
-                   mainPanel(
-                             
-                             tabsetPanel(type = "tabs",
-                                         
-                              # Tabsets  in mainPanel----     
-                               tabPanel("Prediction",
-                                         HTML('<h3> <b> Status/Output of the prediction for diabetes</b> </h3>'
-                                         ), # Status/Output Text Box
-                                        # verbatimTextOutput('contents'),
-                                         textOutput("status"),
-                                         HTML("<br>"),
-                                         tableOutput('tabledata'), # Prediction results table
-                                        # textOutput("explanation", container = span),
-                                         HTML("<br>"),
-                                         HTML("<br>"),
-                                         imageOutput("emoji")   # emoji dependent on prediction)
-                                        ), # Tabpanel
-                               
-                               tabPanel("Dataset",
-                                        HTML("<br>"),
-                                        HTML("<br>"),
-                                        HTML('<h3> <b> Browse through the data </b> </h3>'),
-                                        HTML("<br>"),
-                                        DT::dataTableOutput("diabetes_table"),
-                                        HTML("<br>"),
-                                        HTML("<br>"),
-                                        tags$iframe(src = "diabetes_summary.html",
-                                                    width="100%", height="500",
-                                                    scrolling="no",
-                                                    seamless="seamless",
-                                                    frameBorder="0")
-                                       ), # Tabpanel
-                                         
-                               tabPanel("Prediction algorithm",
-                                        tags$iframe(src = "diabetes_modelPerformance.html",
-                                                    width="100%", height="800",
-                                                    scrolling="no",
-                                                    seamless="seamless",
-                                                    frameBorder="0")    
-                                        )
-                             
-                        
-                                      ) # tabsetPanel                                                
-                             )# mainPanel
-                                     
-               ),#tabPanel
+             ),#tabPanel
            
                navbarMenu("About",
-                          tabPanel("Contact us"),
-                          tabPanel("Disclaimer" )) #NavbarMenu
-              ) # NavbarPage  
-        
-            ) # fluidPage
+                         tabPanel("Contact us",
+                                   tags$iframe(
+                                     src = "diabetes_contactUs.html",
+                                     width="100%", height="500",
+                                     scrolling="no",
+                                     frameBorder="0")),
+                          tabPanel("Disclaimer",
+                                   tags$iframe(
+                                     src = "diabetes_disclaimer.html",
+                                     width="100%", height="500",
+                                     scrolling="no",
+                                     frameBorder="0") )
+                         ) #NavbarMenu
+          ) # NavbarPage  
+      
+        ) # fluidPage
                  
 
-####################################
-# Server                           #
-####################################
+#################################################################################
+# Server                           
+#################################################################################
 
 # Define server logic required to obtain predictions and probabilities of having diabetes
 server <- function(input, output,session) {
@@ -161,7 +211,8 @@ server <- function(input, output,session) {
     input <- transpose(df)
     write.table(input,"input.csv", sep=",", quote = FALSE, row.names = FALSE, col.names = FALSE)
     
-    test <- read.csv(paste("input", ".csv", sep=""), header = TRUE)
+    test <<- read.csv("input.csv", header = TRUE)
+    positive.prob <<- predict(model_diabetes,test,type="prob")[2]
     
     Output <- as.data.frame(cbind(as.character(predict(model_diabetes,test)), # prediction
                             paste(100*round(predict(model_diabetes,test,type="prob")[1],3),"%"), # "No" probability
@@ -169,77 +220,137 @@ server <- function(input, output,session) {
     
     colnames(Output) <- c("Diabetes prediction","'No' probability","'Yes' probability")
     print(Output)
-    
 
     
   })
-  ## TabPanel "Prediction"
-  positive.prob <- predict(model_diabetes,test,type="prob")[2]
-  
-  
-   
-  
-  # Status/Output Text Box
-  output$status <- if (input$submitbutton > 0 ) { 
-    renderText("Diabetes prediction complete!") 
-  } else {
-    renderText( "Specify inputs for each predictor and click on 'Submit'!")
-  }
-  
-  
-  
-      # output$contents <- renderPrint({
-      #                       if (input$submitbutton > 0 &
-      #                           positive.prob > 0.6) { 
-      #                            output$status <- renderText("Diabetes prediction complete!") 
-      #                            output$explanation <- renderText("You possibly have diabetes, inform and confirm with your doctor!")   # Explanation text
-      #                           
-      #                       } else if(input$submitbutton > 0 & 
-      #                                 positive.prob < 0.6 &
-      #                                 positive.prob > 0.4){
-      #                                   output$status <- renderText("Diabetes prediction complete!") 
-      #                                   output$explanation <- renderText("Not so sure if you have diabetes, consult your doctor!")
-      #                       } else if(input$submitbutton > 0 & 
-      #                                 positive.prob < 0.4){
-      #                                   output$status <- renderText("Diabetes prediction complete!") 
-      #                                   output$explanation <- renderText("You possibly do not have diabetes, confirm with your doctor!")
-      #                              }
-      #                        else {
-      #                         output$status <- renderText("Specify inputs for each predictor and click on 'Submit'!")
-      #                       
-      #                              }
-      #                      })
 
-      # Prediction results table
-        output$tabledata <- renderTable({
-                               if (input$submitbutton > 0) { 
-                                  isolate(datasetInput()) 
-                                 } 
-                            })
-      
-      # Emoji images
-         output$emoji <- renderImage({
-                           if (input$submitbutton > 0 
-                              ){
-                             filename <- file.path('./www/sad_emoji.png')
-                             list(src = filename, 
-                                        width = "100px" ,
-                                        height= "100px")}
-                           else{
-                             filename <- file.path('./www/happy_emoji.png')
-                             list(src = filename, 
-                                        width = "50px",
-                                        height= "50px")
-                            }},
-                                     deleteFile = FALSE)
-         
-         ## TabPanel "DATASET"
-         diabetes.table <- read.csv("diabetes.txt", stringsAsFactors = T)
-         output$diabetes_table = DT::renderDataTable({
-           diabetes.table
-         })
-         
+  
+  # Status of the prediction calculation
+  output$status <- renderText(if (input$submitbutton > 0 ) { 
+                    "Diabetes prediction complete!" 
+                    } else {
+                     "Specify inputs for each predictor and click on 'Submit'!"
+                       }
+                    )
+              
+
+   
+
+  # Prediction results table
+    output$tabledata <- renderTable({
+                           if (input$submitbutton > 0) { 
+                              isolate(datasetInput()) 
+                             } 
+                        })
     
+  # Explanation of prediction
+    output$explanation <- renderText(
+                            if (input$submitbutton > 0 &
+                                positive.prob > 0.6) {
+                                  ("<span style=\"color:red\">Looks like you have diabetes,
+                                    inform and confirm with your doctor!</span>")  # Explanation text
+                            } else if(input$submitbutton > 0 &
+                                      positive.prob < 0.6 &
+                                      positive.prob > 0.4){
+                                        ("<span style=\"color:orange\">Not so sure if you have diabetes,
+                                         consult your doctor!</span>")
+                            } else if(input$submitbutton > 0 &
+                                      positive.prob < 0.4){
+                                        ("<span style=\"color:green\">You possibly do not have diabetes, 
+                                          confirm with your doctor!</span>")
+                                      
+                              }
+                           )        
+    
+  
+  # Emoji images
+     output$emoji <- renderImage({
+                       if (input$submitbutton > 0 &
+                           positive.prob > 0.6){
+                         filename <- file.path('./www/sadEmoji.png')
+                         list(src = filename,
+                              style="display: block; 
+                                    margin-left: auto;
+                                    margin-right: auto;")
+                         }
+                       else if(input$submitbutton > 0 &
+                               positive.prob < 0.6 &
+                               positive.prob > 0.4){
+                                 filename <- file.path('./www/neutralEmoji.png')
+                                 list(src = filename,
+                                      style="display: block; 
+                                    margin-left: auto;
+                                    margin-right: auto;")
+                       } else if(input$submitbutton > 0 &
+                                 positive.prob < 0.4){
+                                  filename <- file.path('./www/happyEmoji.png')
+                                  list(src = filename,
+                                       style="display: block; 
+                                          margin-left: auto;
+                                          margin-right: auto;
+                                          width = 50px;")
+                          
+                       } else {
+                         filename <- file.path('./www/happyEmoji.png')
+                         list(src = filename,
+                              style="display: block; 
+                                            margin-left: auto;
+                                            margin-right: auto;")
+                          
+                        }
+                    },
+                       deleteFile = FALSE
+                       )
+     
+     # Disclaimer link
+     # observeEvent(input$link_to_disclaimer, {
+     #   newvalue <- "Disclaimer"
+     #   updateNavbarPage(session, "panels", newvalue)
+     # })
+     
+  ## TabPanel "DATASET"
+     
+     # Dataset table
+     output$diabetes_table = DT::renderDataTable({
+       diabetes.dataset
+     })
+         
+    # Boxplot
+     
+     output$myplot <- renderPlot({
+          if(input$boxplot == "pregnant"){
+           y_label <- "Pregnancies"
+         } else if(input$boxplot == "glucose"){
+           y_label <- "Fasting glucose (mg/dL)"
+         } else if(input$boxplot == "pressure"){
+           y_label <- "Pressure (mm Hg)"
+         }else if(input$boxplot == "triceps"){
+           y_label <- "Triceps skin fold (mm)"
+         }else if(input$boxplot == "insulin"){
+           y_label <- "Insulin (U/mL)"
+         }else if(input$boxplot == "mass"){
+           y_label <- "BMI (Kg/m2)"
+         }else if(input$boxplot == "pedigree"){
+           y_label <- "Pedigree function"
+         }else{
+           y_label <- "Age (years)"
+         }
+       
+       par(mar=c(10,5,3,10)) 
+       
+       boxplot( 
+         get(input$boxplot)~ diabetes , 
+          data=diabetes.dataset, 
+          col = "red", 
+          xlab = "Diabetic",
+          ylab = y_label,
+          main = "Non-diabetic vs diabetic patients",
+          cex.main = 1.5,
+          cex.lab = 2,
+          cex.axis = 1.5)
+     }, 
+     height = 600, 
+     width = 700)
 
 }  # server  
 

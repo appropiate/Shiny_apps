@@ -1,0 +1,58 @@
+---
+title: ' '
+subtitle: ""
+
+author: ""
+date: ''
+output:
+  html_document:
+    df_print: paged
+    toc: no
+header-includes:
+ \usepackage{float}
+ \floatplacement{figure}{H}
+nocite: |
+link-citations: yes
+bibliography: diabetes_citations.bib
+csl: biomed-central.csl
+editor_options: 
+  chunk_output_type: console
+---
+<style>
+body {
+    position: absolute;
+    left: 0px;}
+</style>
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, comment = NA, message = FALSE, warning = FALSE)
+```
+
+
+
+```{r cache = T}
+# Set working directory
+setwd(dirname(rstudioapi::getSourceEditorContext()$path))
+```
+
+
+### **Contact us!**
+Whether you have any questions or suggestions about our site, you are welcome to contact us:
+
+- **Email:**  <a href = "mailto: abc@example.com"> abc@example.com</a> or <a href = "mailto: abc@example.com"> cde@example.com</a>.
+- **Phone:** 12345678 or 90123456
+
+You can also visit us at:
+
+<p style="margin-bottom:0;">**Department of IT and Statistics**</p>
+<p style="margin-bottom:0;">**Health and Research Center, 2<sup>nd</sup> floor**</p>
+<p style="margin-bottom:0;">**Example street 12**</p>
+<p style="margin-bottom:0;">**4789**</p>
+<p style="margin-bottom:0;">**Country**</p>
+
+
+
+
+
+
+

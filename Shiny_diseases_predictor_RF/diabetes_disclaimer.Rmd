@@ -1,0 +1,47 @@
+---
+title: ' '
+subtitle: ""
+
+author: ""
+date: ''
+output:
+  html_document:
+    df_print: paged
+    toc: no
+header-includes:
+ \usepackage{float}
+ \floatplacement{figure}{H}
+nocite: |
+link-citations: yes
+bibliography: diabetes_citations.bib
+csl: biomed-central.csl
+editor_options: 
+  chunk_output_type: console
+---
+<style>
+body {
+    position: absolute;
+    left: 0px;}
+</style>
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, comment = NA, message = FALSE, warning = FALSE)
+```
+
+
+
+```{r cache = T}
+# Set working directory
+setwd(dirname(rstudioapi::getSourceEditorContext()$path))
+```
+
+
+### **Medical disclaimer**
+The information provided in this app is not intended to be a substitute for professional medical advice and should not be relied on as health or personal advice. Always seek the guidance of your doctor or other qualified health professionals with any questions you may have regarding your health or a medical condition.
+
+
+
+
+
+
+
