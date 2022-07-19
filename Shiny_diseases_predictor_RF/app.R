@@ -17,9 +17,11 @@ library(knitr)
 library(data.table)
 library(DT)
 library(C50)
+library(magrittr)
+
 
 # Set working directory
-setwd(dirname(rstudioapi::getSourceEditorContext()$path))
+# setwd(dirname(rstudioapi::getSourceEditorContext()$path))
 
 # Read in dataset and the RF model_diabetes
 diabetes.dataset <- read.csv("diabetes.txt", stringsAsFactors = T)
@@ -34,7 +36,8 @@ model_diabetes <- readRDS("model_diabetes.rds")
 
 # Define UI for application that draws a histogram
 ui <- fluidPage(
-        title = "Hola",
+        title = "Disease predictors with Shiny",
+       
         tags$style( # output styles
           "#status {
           font-size:18px;
@@ -56,42 +59,41 @@ ui <- fluidPage(
            #theme = 'sandstone',
          "HEALTH PREDICTORS:",
          id="MainNavBar",
-         tabPanel("Diabetes",
-                  sidebarPanel(
-                   tags$h3("Predictor inputs:"),
-                   sliderInput(inputId = "pregnant", 
-                                label = "Pregnancies", 
-                                min = 0, 
-                                max = 20,
-                                value = 0),
-                   numericInput(inputId ="glucose", 
-                                label = "Fasting glucose (mg/dL)", 
-                                value = 100),
-                   numericInput(inputId ="pressure", 
-                                label ="Dyastolic Pressure (mm Hg)", 
-                                value = 50),
-                   numericInput(inputId ="triceps", 
-                                label ="Triceps Skin Fold (mm)", 
-                                value = 25),
-                   numericInput(inputId ="insulin", 
-                                label ="Insulin (U/mL)", 
-                                value = 150),
-                   numericInput(inputId ="mass",
-                                label ="Body Mass Index (kg/m2)", 
-                                value = 30),
-                   numericInput(inputId ="pedigree", 
-                                label ="Diabetes pedigree function", 
-                                value = 2),
-                   numericInput(inputId ="age", 
-                                label ="Age", 
-                                value = 30),
-                   actionButton(inputId ="submitbutton",
-                                label ="Submit",
-                                class = "btn btn-primary" ),
+           tabPanel("Diabetes",
+              sidebarPanel(
+               tags$h3("Predictor inputs:"),
+               sliderInput(inputId = "pregnant", 
+                            label = "Pregnancies", 
+                            min = 0, 
+                            max = 20,
+                            value = 0),
+               numericInput(inputId ="glucose", 
+                            label = "Fasting glucose (mg/dL)", 
+                            value = 100),
+               numericInput(inputId ="pressure", 
+                            label ="Dyastolic Pressure (mm Hg)", 
+                            value = 50),
+               numericInput(inputId ="triceps", 
+                            label ="Triceps Skin Fold (mm)", 
+                            value = 25),
+               numericInput(inputId ="insulin", 
+                            label ="Insulin (U/mL)", 
+                            value = 150),
+               numericInput(inputId ="mass",
+                            label ="Body Mass Index (kg/m2)", 
+                            value = 30),
+               numericInput(inputId ="pedigree", 
+                            label ="Diabetes pedigree function", 
+                            value = 2),
+               numericInput(inputId ="age", 
+                            label ="Age", 
+                            value = 30),
+               actionButton(inputId ="submitbutton",
+                            label ="Submit",
+                            class = "btn btn-primary" )
                   ), # sidebarPanel
                                  
                  mainPanel(
-                   
                      tabsetPanel(type = "tabs",
                                  id = "panels",
                                  
@@ -105,32 +107,37 @@ ui <- fluidPage(
                                  tableOutput('tabledata'), # Prediction results table
                                  htmlOutput("explanation", container = span),
                                  HTML("<br>"),
+                                 actionLink("link_to_disclaimer", "Disclaimer"),
                                  HTML("<br>"),
-                                 imageOutput("emoji"),# emoji dependent on prediction)
-                                 actionLink("link_to_disclaimer", "Disclaimer")
+                                 imageOutput("emoji")# emoji dependent on prediction)
                                 ), # TabPanel
                       
                       tabPanel("Prediction algorithm",
                                tags$iframe(
                                  src = "diabetes_modelPerformance.html",
-                                 width="100%", height="800",
+                                 width="100%", 
+                                 height="950",
                                  scrolling="no",
                                  seamless="seamless",
                                  frameBorder="0")   
                       ),# TabPanel
                        
                        tabPanel("Dataset",
+                                
                                 hr(),
+                                fluidRow(
+                                  style = "height:40hv",
                                 tags$iframe(
                                   src = "diabetes_summary.html",
-                                  width="100%", 
-                                  height="500",
+                                   width="100%", 
+                                   height="525",
                                   scrolling="no",
                                   seamless="seamless",
                                   frameBorder="0"),
                                 hr(),
                                 HTML('<h3> <b> Plot predictors against diabetes </b> </h3>'),
-                                HTML("<br>"),
+                                HTML("<br>")
+                                ), # fluidRow
                                 selectInput("boxplot",
                                             "Choose predictor", 
                                             choices = c("Pregnancies"= "pregnant",
@@ -143,19 +150,40 @@ ui <- fluidPage(
                                                         "Age (years)" = "age"),
                                             selected = "glucose"),
                                 plotOutput("myplot", 
-                                           width="100%", 
-                                           height="550"),
+                                           width="100%",
+                                           height="600"
+                                           ),
                                 downloadButton("download", "Download boxplot"),
                                 HTML("<br>"),
                                 HTML("<br>"),
                                 HTML('<h3> <b> Browse through the data </b> </h3>'),
                                 HTML("<br>"),
-                                DT::dataTableOutput("diabetes_table"),
+                                DT::dataTableOutput("diabetes_table",
+                                                    height = "25%"),
                                 HTML("<br>"),
                                 HTML("<br>")
                                 
                                 
-                               )
+                               ), # TabPanel
+                      
+                      tabPanel("Diabetes Worldwide",
+                               hr(),
+                               HTML('<h3> <b> Diabetes prevalence</b> </h3>'),
+                               HTML("See actual and past prevalence of diabetes by country in the interactive map below"),
+                               hr(),
+                               HTML('<h3> <b> Further information on Diabetes</b> </h3>'),
+                               HTML('<iframe 
+                                width="560"   
+                                height="315"
+                                src="https://www.youtube.com/embed/76VTcfCzRfo"
+                                frameborder="0"
+                                allow="accelerometer; 
+                                      autoplay;
+                                      encrypted-media; 
+                                      gyroscope;
+                                      picture-in-picture;"></iframe>')
+                               
+                      )
                      
                 
                               ) # tabsetPanel  
@@ -355,7 +383,7 @@ server <- function(input, output,session) {
                                         "pedigree", 
                                         "age"))
        par(mar=c(10,5,3,10)) 
-       pval <-t.test(diabetes.dataset[diabetes.dataset$diabetes == "No",input$boxplot],
+       pval <<-t.test(diabetes.dataset[diabetes.dataset$diabetes == "No",input$boxplot],
                       diabetes.dataset[diabetes.dataset$diabetes == "Yes",input$boxplot])$p.value
        pval <<- signif(pval, digits = 3)
        

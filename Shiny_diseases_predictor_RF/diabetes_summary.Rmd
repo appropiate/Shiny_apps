@@ -14,7 +14,7 @@ header-includes:
 nocite: |
 link-citations: yes
 bibliography: diabetes_citations.bib
-csl: laparoscopic-endoscopic-and-robotic-surgery.csl
+csl: biomed-central.csl
 editor_options: 
   chunk_output_type: console
 ---
@@ -90,6 +90,7 @@ model.predict
 ```
 ### **References**
 ```{r}
+
 ```
 
 

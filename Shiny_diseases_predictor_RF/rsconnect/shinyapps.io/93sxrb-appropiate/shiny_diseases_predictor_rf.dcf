@@ -1,0 +1,13 @@
+name: shiny_diseases_predictor_rf
+title:
+username:
+account: 93sxrb-appropiate
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 6661091
+bundleId: 6113212
+url: https://93sxrb-appropiate.shinyapps.io/shiny_diseases_predictor_rf/
+when: 1658262574.78277
+lastSyncTime: 1658262574.7828
+asMultiple: FALSE
+asStatic: FALSE

@@ -79,9 +79,11 @@ model_diabetes.predict <- predict(model_diabetes,TestingSet)
 model_diabetes.performance <- confusionMatrix(data = model_diabetes.predict ,
                 reference = TestingSet$diabetes, positive = "Positive")
 ```
+<!---[GitHub](https://github.com/appropiate/Shiny_apps/tree/main/Shiny_diseases_predictor_RF "Go to www.github.com")--->
+
 
 ### **Algorithm performance**
-This prediction model was built in R using the diabetes data set and the decision tree algorithm C5.0 from the package C50 @KuhnMax2022. The code used to build this predictor and the rest of this Shiny app is available in [GitHub](https://github.com/appropiate/Shiny_apps/tree/main/Shiny_diseases_predictor_RF "Go to www.github.com"). The confusion matrix for the test dataset as well as different performance metrics can be found below:
+This prediction model was built in R using the diabetes data set and the decision tree algorithm C5.0 from the package C50 @KuhnMax2022. The code used to build this predictor and the rest of this Shiny app is available in  <a href ="https://github.com/appropiate/Shiny_apps/tree/main/Shiny_diseases_predictor_RF " title="Go to GitHub" target = "_blank">GitHub</a>. The confusion matrix for the test dataset as well as different performance metrics can be found below:
 
 ```{r }
 
