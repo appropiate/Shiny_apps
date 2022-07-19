@@ -37,7 +37,7 @@ setwd(dirname(rstudioapi::getSourceEditorContext()$path))
 
 
 ### **Contact us!**
-Whether you have any questions or suggestions about our site, you are welcome to contact us:
+Whether you have any questions or suggestions about our app, you are welcome to contact us:
 
 - **Email:**  <a href = "mailto: abc@example.com"> abc@example.com</a> or <a href = "mailto: abc@example.com"> cde@example.com</a>.
 - **Phone:** 12345678 or 90123456

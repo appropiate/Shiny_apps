@@ -16,7 +16,7 @@ link-citations: yes
 bibliography: diabetes_citations.bib
 editor_options: 
   chunk_output_type: console
-csl: biomed-central.csl
+csl: laparoscopic-endoscopic-and-robotic-surgery.csl
 
 ---
 

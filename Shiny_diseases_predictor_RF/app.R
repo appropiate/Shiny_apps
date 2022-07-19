@@ -128,8 +128,11 @@ ui <- fluidPage(
                                   scrolling="no",
                                   seamless="seamless",
                                   frameBorder="0"),
+                                hr(),
+                                HTML('<h3> <b> Plot predictors against diabetes </b> </h3>'),
+                                HTML("<br>"),
                                 selectInput("boxplot",
-                                            "Predictor to plot against diabetes", 
+                                            "Choose predictor", 
                                             choices = c("Pregnancies"= "pregnant",
                                                         "Fasting glucose (mg/dL)" = "glucose", 
                                                         "Pressure (mm Hg)" = "pressure", 
@@ -142,6 +145,7 @@ ui <- fluidPage(
                                 plotOutput("myplot", 
                                            width="100%", 
                                            height="550"),
+                                downloadButton("download", "Download boxplot"),
                                 HTML("<br>"),
                                 HTML("<br>"),
                                 HTML('<h3> <b> Browse through the data </b> </h3>'),
@@ -325,24 +329,24 @@ server <- function(input, output,session) {
      
      output$myplot <- renderPlot({
           if(input$boxplot == "pregnant"){
-           y_label <- "Pregnancies"
+           y_label <<- "Pregnancies"
          } else if(input$boxplot == "glucose"){
-           y_label <- "Fasting glucose (mg/dL)"
+           y_label <<- "Fasting glucose (mg/dL)"
          } else if(input$boxplot == "pressure"){
-           y_label <- "Pressure (mm Hg)"
+           y_label <<- "Pressure (mm Hg)"
          }else if(input$boxplot == "triceps"){
-           y_label <- "Triceps skin fold (mm)"
+           y_label <<- "Triceps skin fold (mm)"
          }else if(input$boxplot == "insulin"){
-           y_label <- "Insulin (U/mL)"
+           y_label <<- "Insulin (U/mL)"
          }else if(input$boxplot == "mass"){
-           y_label <- "BMI (Kg/m2)"
+           y_label <<- "BMI (Kg/m2)"
          }else if(input$boxplot == "pedigree"){
-           y_label <- "Pedigree function"
+           y_label <<- "Pedigree function"
          }else{
-           y_label <- "Age (years)"
+           y_label <<- "Age (years)"
          }
   
-       Color <- match(input$boxplot , c("pregnant",
+       Color <<- match(input$boxplot , c("pregnant",
                                         "glucose", 
                                         "pressure", 
                                         "triceps", 
@@ -353,21 +357,44 @@ server <- function(input, output,session) {
        par(mar=c(10,5,3,10)) 
        pval <-t.test(diabetes.dataset[diabetes.dataset$diabetes == "No",input$boxplot],
                       diabetes.dataset[diabetes.dataset$diabetes == "Yes",input$boxplot])$p.value
-       pval <- signif(pval, digits = 3)
+       pval <<- signif(pval, digits = 3)
        
-       boxplot( 
-         get(input$boxplot) ~ diabetes, 
-          data=diabetes.dataset, 
-          col = Color + 1, 
-          xlab = "Diabetic",
-          ylab = y_label,
-          main = bquote(bold("Non-diabetic vs diabetic patients,") ~ italic("pval") ~ .("<") ~ .(pval)),
-          cex.main = 1.5,
-          cex.lab = 2,
-          cex.axis = 1.5)
- ?brus     }, 
+       (bxplot <<-boxplot( 
+                   get(input$boxplot) ~ diabetes, 
+                    data=diabetes.dataset, 
+                    col = Color + 1, 
+                    xlab = "Diabetic",
+                    ylab = y_label,
+                    main = bquote(bold("Non-diabetic vs diabetic patients,") ~ italic("pval") ~ .("<") ~ .(pval)),
+                    cex.main = 1.5,
+                    cex.lab = 2,
+                    cex.axis = 1.5)
+         )
+         
+
+       }, 
      height = 600, 
      width = 700)
+     
+     #Download button
+ 
+     output$download <- downloadHandler(
+       file = function(){paste(input$boxplot, "vs diabetes.png")}, # variable with filename
+       content = function(file){
+         png(file)
+        { par(mar=c(6,8,6,8)) 
+          boxplot( 
+           get(input$boxplot) ~ diabetes, 
+           data=diabetes.dataset, 
+           col = Color + 1, 
+           xlab = "Diabetic",
+           ylab = y_label,
+           main = bquote(bold("Non-diabetic vs diabetic patients,") ~ italic("pval") ~ .("<") ~ .(pval)),
+           cex.main = 1.5,
+           cex.lab = 2,
+           cex.axis = 1.5)}
+         dev.off()
+       })
 
 }  # server  
 
