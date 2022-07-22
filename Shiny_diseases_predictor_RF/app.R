@@ -18,16 +18,54 @@ library(data.table)
 library(DT)
 library(C50)
 library(magrittr)
-
+library(rvest)
+library(maps)
+library(ggplot2)
+library(RColorBrewer)
+library(ggiraph)
 
 # Set working directory
 # setwd(dirname(rstudioapi::getSourceEditorContext()$path))
 
 # Read in dataset and the RF model_diabetes
+
+model_diabetes <- readRDS("model_diabetes.rds")
 diabetes.dataset <- read.csv("diabetes.txt", stringsAsFactors = T)
 levels(diabetes.dataset$diabetes) <- c("No", "Yes")
 
-model_diabetes <- readRDS("model_diabetes.rds")
+## Dataset on diabetes prevalence
+dfprev <- read.csv("diabetesPrevalence.csv", header = T)
+dfprev <- dfprev[,c("Country.Name","Country.Code","X2011","X2021")]
+colnames(dfprev) <- c("country", "ISO3","y2011","y2021")
+all(unique(dfprev$ISO3 == dfprev$ISO3))
+head(dfprev)
+# remove countries not present in world_data
+dfprev <- dfprev[which(dfprev$ISO3%in%world_data$ISO3),]
+
+
+## Exporting and cleaning world data
+world_data2 <- read.csv("countries_codes_and_coordinates.csv", header=T) # contains ISO3
+world_data <- map_data("world") # Contains map
+world_data <<- fortify(world_data) # To avoid losing map
+# remove space from ISO3 codes
+world_data2$Alpha.3.code <<- sapply(world_data2$Alpha.3.code,function(x){gsub(" ","",x)})
+# match some  important country names between both datasets
+old_names <- c("Antigua",   "UK","Iran"  ,
+               "Russia","USA" ,"Venezuela")
+
+new_names <- c("Antigua and Barbuda","United Kingdom"  ,"Iran, Islamic Republic of", 
+               "Russian Federation", "United States","Venezuela, Bolivarian Republic of")
+
+for (i in 1:length(old_names)){
+  world_data$region[world_data$region == old_names[i]] <- new_names[i]}
+
+# Add ISO3 codes to world_data from world_data2:
+world_data["ISO3"] <- world_data2$Alpha.3.code[match(world_data$region,world_data2$Country)]
+head(world_data)
+# Add year columns to world_data:
+world_data["y2011"] <- dfprev[,"y2011"][match(world_data$ISO3,dfprev$ISO3)]
+world_data["y2021"] <- dfprev[,"y2021"][match(world_data$ISO3,dfprev$ISO3)]
+
 
 
 ###################################################################################
@@ -171,7 +209,24 @@ ui <- fluidPage(
                                HTML('<h3> <b> Diabetes prevalence</b> </h3>'),
                                HTML("See actual and past prevalence of diabetes by country in the interactive map below"),
                                hr(),
+                                  # Input for interactive map
+                               selectInput(inputId = "year",
+                                            label = "Choose Year:",
+                                            choices = list("2011" = "y2011", 
+                                                           "2021" = "y2021"),
+                                            selected = "y2011"),
+                               # Output: interactive world map
+                               girafeOutput("disPlot",
+                                            height="600"),
                                HTML('<h3> <b> Further information on Diabetes</b> </h3>'),
+                              
+                                HTML("<ul>
+                                      <li><a href = 'https://www.diabetes.no/'><b>Norwegian Diabetes Association</b></a></li>
+                                      <li><a href = 'https://www.easd.org/'><b>European Association for the Study of Diabetes</b></a></li>
+                                      <li><a href = 'https://www.diabetes.org/'><b>American Diabetes Association</b></a></li>
+                                     </ul>"),
+                                hr() ,
+                               # Video on Diabetes prevalence
                                HTML('<iframe 
                                 width="560"   
                                 height="315"
@@ -181,8 +236,10 @@ ui <- fluidPage(
                                       autoplay;
                                       encrypted-media; 
                                       gyroscope;
-                                      picture-in-picture;"></iframe>')
-                               
+                                      picture-in-picture;"></iframe>'),
+                               hr() 
+                              
+                            
                       )
                      
                 
@@ -423,6 +480,58 @@ server <- function(input, output,session) {
            cex.axis = 1.5)}
          dev.off()
        })
+     
+     # Create the interactive world map
+     
+     output$disPlot <- renderGirafe({
+       
+       # Select data to view
+       ifelse(input$year == "y2011", 
+              plotdf <<- world_data[,names(world_data) != "y2021"], 
+              plotdf <<- world_data[,names(world_data) != "y2011"])
+       
+       names(plotdf)[8] <- "Year"
+       
+       # caption with the data source 
+       caption <- "Source: World Development Indicators"
+       
+       #Specify the plot for the world map
+       library(RColorBrewer)
+       library(ggiraph)
+       
+       g <- ggplot() + 
+         geom_polygon_interactive(data = subset(plotdf, lat >= -60 & lat <= 90), 
+                                  color = "gray70",
+                                  size = 0.1,
+                                  aes(x = long, 
+                                      y = lat, 
+                                      group=group,
+                                      fill =  Year,  
+                                      tooltip = sprintf("%s<br/>%s", 
+                                                        ISO3,
+                                                        Year))) +
+         scale_fill_gradientn(colours = brewer.pal(5,"YlOrRd"),
+                              na.value = "white") +
+         labs(fill =  ifelse(input$year == "y2011","2011" ,"2021"),
+              color = ifelse(input$year == "y2011","2011" ,"2021"), 
+              title = NULL, 
+              x = NULL, 
+              y = NULL, 
+              caption = caption) +
+         theme_bw() + 
+         theme(axis.title = element_blank(),
+               axis.text = element_blank(),
+               axis.ticks = element_blank(),
+               panel.grid.major = element_blank(),
+               panel.grid.minor = element_blank(),
+               panel.background = element_blank(),
+               legend.position = "bottom",
+               panel.border = element_blank(),
+               strip.background = element_rect(fill="white",
+                                               colour = "white"))
+       
+       ggiraph(code = print(g))
+     })
 
 }  # server  
 
