@@ -6,6 +6,19 @@
 #
 #    http://shiny.rstudio.com/
 #
+# Set working directory
+# setwd(dirname(rstudioapi::getSourceEditorContext()$path))
+
+if(!require(magrittr)) install.packages("magrittr", repos = "http://cran.us.r-project.org")
+if(!require(rvest)) install.packages("rvest", repos = "http://cran.us.r-project.org")
+if(!require(readxl)) install.packages("readxl", repos = "http://cran.us.r-project.org")
+if(!require(dplyr)) install.packages("dplyr", repos = "http://cran.us.r-project.org")
+if(!require(maps)) install.packages("maps", repos = "http://cran.us.r-project.org")
+if(!require(ggplot2)) install.packages("ggplot2", repos = "http://cran.us.r-project.org")
+if(!require(reshape2)) install.packages("reshape2", repos = "http://cran.us.r-project.org")
+if(!require(shiny)) install.packages("shiny", repos = "http://cran.us.r-project.org")
+if(!require(ggiraph)) install.packages("ggiraph", repos = "http://cran.us.r-project.org")
+if(!require(RColorBrewer)) install.packages("RColorBrewer", repos = "http://cran.us.r-project.org")
 
 library(shiny)
 library(stringr)
@@ -24,8 +37,7 @@ library(ggplot2)
 library(RColorBrewer)
 library(ggiraph)
 
-# Set working directory
-# setwd(dirname(rstudioapi::getSourceEditorContext()$path))
+
 
 # Read in dataset and the RF model_diabetes
 
@@ -46,9 +58,9 @@ dfprev <- dfprev[which(dfprev$ISO3%in%world_data$ISO3),]
 ## Exporting and cleaning world data
 world_data2 <- read.csv("countries_codes_and_coordinates.csv", header=T) # contains ISO3
 world_data <- map_data("world") # Contains map
-world_data <<- fortify(world_data) # To avoid losing map
+world_data <- fortify(world_data) # To avoid losing map
 # remove space from ISO3 codes
-world_data2$Alpha.3.code <<- sapply(world_data2$Alpha.3.code,function(x){gsub(" ","",x)})
+world_data2$Alpha.3.code <- sapply(world_data2$Alpha.3.code,function(x){gsub(" ","",x)})
 # match some  important country names between both datasets
 old_names <- c("Antigua",   "UK","Iran"  ,
                "Russia","USA" ,"Venezuela")
@@ -482,13 +494,14 @@ server <- function(input, output,session) {
        })
      
      # Create the interactive world map
-     
+
      output$disPlot <- renderGirafe({
+       
        
        # Select data to view
        ifelse(input$year == "y2011", 
-              plotdf <<- world_data[,names(world_data) != "y2021"], 
-              plotdf <<- world_data[,names(world_data) != "y2011"])
+              plotdf <- world_data[,names(world_data) != "y2021"], 
+              plotdf <- world_data[,names(world_data) != "y2011"])
        
        names(plotdf)[8] <- "Year"
        
@@ -496,8 +509,7 @@ server <- function(input, output,session) {
        caption <- "Source: World Development Indicators"
        
        #Specify the plot for the world map
-       library(RColorBrewer)
-       library(ggiraph)
+     
        
        g <- ggplot() + 
          geom_polygon_interactive(data = subset(plotdf, lat >= -60 & lat <= 90), 
