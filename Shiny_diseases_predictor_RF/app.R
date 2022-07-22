@@ -7,7 +7,7 @@
 #    http://shiny.rstudio.com/
 #
 # Set working directory
-# setwd(dirname(rstudioapi::getSourceEditorContext()$path))
+ setwd(dirname(rstudioapi::getSourceEditorContext()$path))
 
 if(!require(magrittr)) install.packages("magrittr", repos = "http://cran.us.r-project.org")
 if(!require(rvest)) install.packages("rvest", repos = "http://cran.us.r-project.org")
@@ -58,7 +58,9 @@ dfprev <- dfprev[which(dfprev$ISO3%in%world_data$ISO3),]
 ## Exporting and cleaning world data
 world_data2 <- read.csv("countries_codes_and_coordinates.csv", header=T) # contains ISO3
 world_data <- map_data("world") # Contains map
-world_data <- fortify(world_data) # To avoid losing map
+ world_data <- fortify(world_data) # To avoid losing map
+
+# world_data <- readRDS("world.Rds")
 # remove space from ISO3 codes
 world_data2$Alpha.3.code <- sapply(world_data2$Alpha.3.code,function(x){gsub(" ","",x)})
 # match some  important country names between both datasets
