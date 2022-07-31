@@ -5,9 +5,9 @@ account: 93sxrb-appropiate
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 6685646
-bundleId: 6149607
+bundleId: 6149614
 url: https://93sxrb-appropiate.shinyapps.io/Shiny_diseases_predictor_RF/
-when: 1659238831.57391
-lastSyncTime: 1659238831.57392
+when: 1659239342.05007
+lastSyncTime: 1659239342.05008
 asMultiple: FALSE
 asStatic: FALSE

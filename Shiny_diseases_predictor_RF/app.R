@@ -149,9 +149,7 @@ ui <- fluidPage(
                                  HTML("<br>"),
                                  actionLink("link_to_disclaimer", "Disclaimer"),
                                  HTML("<br>"),
-                                 imageOutput("emoji"),# emoji dependent on prediction)
-                                HTML('<h5> By Sergio Carracedo Huroz, 2022 </h5>')
-                                     
+                                 imageOutput("emoji")# emoji dependent on prediction)
                                 ), # TabPanel
                       
                       tabPanel("Prediction algorithm",
