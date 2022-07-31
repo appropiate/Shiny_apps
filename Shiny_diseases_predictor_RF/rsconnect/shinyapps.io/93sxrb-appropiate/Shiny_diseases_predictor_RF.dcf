@@ -4,11 +4,10 @@ username:
 account: 93sxrb-appropiate
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
-appId: 6677760
-bundleId: 6123938
+appId: 6685646
+bundleId: 6149607
 url: https://93sxrb-appropiate.shinyapps.io/Shiny_diseases_predictor_RF/
-when: 1658508388.27254
-lastSyncTime: 1658508388.27257
+when: 1659238831.57391
+lastSyncTime: 1659238831.57392
 asMultiple: FALSE
 asStatic: FALSE
-ignoredFiles: cirrhosis.csv|diabetes_contactUs.Rmd|diabetes_disclaimer.Rmd|diabetes_modelPerformance.Rmd|diabetes_summary.Rmd|japanese-dental-science-review.csl|laparoscopic-endoscopic-and-robotic-surgery.csl|MM-DataSet.arff|model_cirrhosis.R|model_cirrhosis.rds|model_mm.R|testing_cirrhosis.csv|testing_mm.csv|training_cirrhosis.csv|training_diabetes.csv
