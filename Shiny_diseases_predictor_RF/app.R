@@ -506,7 +506,6 @@ server <- function(input, output,session) {
        library(RColorBrewer)
        library(ggiraph)
        
-<<<<<<< HEAD
        g <- ggplot() + 
          geom_polygon_interactive(data = subset(plotdf, lat >= -60 & lat <= 90), 
                                   color = "gray70",
@@ -537,7 +536,6 @@ server <- function(input, output,session) {
                strip.background = element_rect(fill="white",
                                                colour = "white"))
        
-=======
        g <-ggplot() + 
            geom_polygon_interactive(data = subset(plotdf, lat >= -60 & lat <= 90), 
                                     color = "gray70",
@@ -573,7 +571,6 @@ server <- function(input, output,session) {
                  strip.background = element_rect(fill="white",
                                                  colour = "white"))
      
->>>>>>> test
        ggiraph(code = print(g))
      })
 
