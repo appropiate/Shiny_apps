@@ -546,7 +546,7 @@ server <- function(input, output,session) {
                                         fill =  Year,  
                                         tooltip = sprintf("%s<br/>%s", 
                                                           ISO3,
-                                                          Year))) +
+                                                          Year))) + 
          
            scale_fill_gradientn(colours = brewer.pal(5,"YlOrRd"),
                                 na.value = "white") +
