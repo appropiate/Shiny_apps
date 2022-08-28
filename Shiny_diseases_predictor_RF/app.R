@@ -26,7 +26,9 @@ library(ggplot2)
 library(RColorBrewer)
 library(ggiraph)
 
-
+#####################################################
+# Preparing datasets
+#####################################################
 
 #------------------- Read in diabetes dataset and the RF model_diabetes
 model_diabetes <- readRDS("model_diabetes.rds")
@@ -178,8 +180,8 @@ ui <- fluidPage(
                                 HTML('<h3> <b> Plot predictors against diabetes </b> </h3>'),
                                 HTML("<br>")
                                 ), # fluidRow
-                                selectInput("boxplot",
-                                            "Choose predictor", 
+                                selectInput(inputId = "boxplot",
+                                            label = "Choose predictor", 
                                             choices = c("Pregnancies"= "pregnant",
                                                         "Fasting glucose (mg/dL)" = "glucose", 
                                                         "Pressure (mm Hg)" = "pressure", 
@@ -211,15 +213,18 @@ ui <- fluidPage(
                                HTML('<h3> <b> Diabetes prevalence</b> </h3>'),
                                HTML("See actual and past prevalence of diabetes by country in the interactive map below"),
                                hr(),
-                                  # Input for interactive map
+                               
+                               # Input for interactive map
                                selectInput(inputId = "year",
                                             label = "Choose Year:",
                                             choices = list("2011" = "y2011", 
                                                            "2021" = "y2021"),
                                             selected = "y2011"),
+                               
                                # Output: interactive world map
                                girafeOutput("disPlot",
                                             height="600"),
+                               
                                HTML('<h3> <b> Further information on Diabetes</b> </h3>'),
                               
                                 HTML("<ul>
@@ -228,6 +233,7 @@ ui <- fluidPage(
                                       <li><a href = 'https://www.diabetes.org/'><b>American Diabetes Association</b></a></li>
                                      </ul>"),
                                 hr() ,
+                               
                                # Video on Diabetes prevalence
                                HTML('<iframe 
                                 width="560"   
@@ -500,6 +506,7 @@ server <- function(input, output,session) {
        library(RColorBrewer)
        library(ggiraph)
        
+<<<<<<< HEAD
        g <- ggplot() + 
          geom_polygon_interactive(data = subset(plotdf, lat >= -60 & lat <= 90), 
                                   color = "gray70",
@@ -530,6 +537,43 @@ server <- function(input, output,session) {
                strip.background = element_rect(fill="white",
                                                colour = "white"))
        
+=======
+       g <-ggplot() + 
+           geom_polygon_interactive(data = subset(plotdf, lat >= -60 & lat <= 90), 
+                                    color = "gray70",
+                                    size = 0.1,
+                                    aes(x = long, 
+                                        y = lat, 
+                                        group=group,
+                                        fill =  Year,  
+                                        tooltip = sprintf("%s<br/>%s", 
+                                                          ISO3,
+                                                          Year))) +
+         
+           scale_fill_gradientn(colours = brewer.pal(5,"YlOrRd"),
+                                na.value = "white") +
+         
+           labs(fill =  ifelse(input$year == "y2011","2011" ,"2021"),
+                color = ifelse(input$year == "y2011","2011" ,"2021"), 
+                title = NULL, 
+                x = NULL, 
+                y = NULL, 
+                caption = caption) +
+         
+           theme_bw() + 
+         
+           theme(axis.title = element_blank(),
+                 axis.text = element_blank(),
+                 axis.ticks = element_blank(),
+                 panel.grid.major = element_blank(),
+                 panel.grid.minor = element_blank(),
+                 panel.background = element_blank(),
+                 legend.position = "bottom",
+                 panel.border = element_blank(),
+                 strip.background = element_rect(fill="white",
+                                                 colour = "white"))
+     
+>>>>>>> test
        ggiraph(code = print(g))
      })
 
